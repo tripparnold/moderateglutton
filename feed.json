@@ -2,8 +2,8 @@
     "version": "https://jsonfeed.org/version/1",
     "title": "Moderate Glutton",
     "description": "",
-    "home_page_url": "https://tripparnold.github.io/moderateglutton",
-    "feed_url": "https://tripparnold.github.io/moderateglutton/feed.json",
+    "home_page_url": "https://moderateglutton.com",
+    "feed_url": "https://moderateglutton.com/feed.json",
     "user_comment": "",
     "author": {
         "name": "Tripp Arnold"
