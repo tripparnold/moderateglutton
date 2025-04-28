@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://tripparnold.github.io/moderateglutton/sitemap.xml
