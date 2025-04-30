@@ -3,10 +3,37 @@
     <title>Moderate Glutton</title>
     <link href="https://moderateglutton.com/feed.xml" rel="self" />
     <link href="https://moderateglutton.com" />
-    <updated>1969-12-31T18:00:00-06:00</updated>
+    <updated>2025-04-30T10:22:08-05:00</updated>
     <author>
         <name>Tripp Arnold</name>
     </author>
     <id>https://moderateglutton.com</id>
 
+    <entry>
+        <title>What I cooked for dinner</title>
+        <author>
+            <name>Tripp Arnold</name>
+        </author>
+        <link href="https://moderateglutton.com/what-i-cooked-for-dinner/"/>
+        <id>https://moderateglutton.com/what-i-cooked-for-dinner/</id>
+
+        <updated>2025-04-30T10:22:08-05:00</updated>
+            <summary>
+                <![CDATA[
+                    A running list of what I am cooking for dinner. Use it for ideas or to entertain your boredom. This will be a long, ongoing list, so I'll keep it simple for you. Here's what to expect below: What I cooked (don't worry there will&hellip;
+                ]]>
+            </summary>
+        <content type="html">
+            <![CDATA[
+                <h5>A running list of what I am cooking for dinner. Use it for ideas or to entertain your boredom. This will be a long, ongoing list, so I'll keep it simple for you. Here's what to expect below:</h5>
+<ul>
+<li>What I cooked (don't worry there will be a photo)</li>
+<li>What I experimented with</li>
+<li>What I liked and did not like</li>
+<li>Other thoughts. I'll try to spare you here. I'm a cutthroat critic of my own cooking</li>
+</ul>
+<p> </p>
+            ]]>
+        </content>
+    </entry>
 </feed>

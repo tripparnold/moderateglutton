@@ -10,5 +10,19 @@
         "name": "Tripp Arnold"
     },
     "items": [
+        {
+            "id": "https://moderateglutton.com/what-i-cooked-for-dinner/",
+            "url": "https://moderateglutton.com/what-i-cooked-for-dinner/",
+            "title": "What I cooked for dinner",
+            "summary": "A running list of what I am cooking for dinner. Use it for ideas or to entertain your boredom. This will be a long, ongoing list, so I'll keep it simple for you. Here's what to expect below: What I cooked (don't worry there will&hellip;",
+            "content_html": "<h5>A running list of what I am cooking for dinner. Use it for ideas or to entertain your boredom. This will be a long, ongoing list, so I'll keep it simple for you. Here's what to expect below:</h5>\n<ul>\n<li>What I cooked (don't worry there will be a photo)</li>\n<li>What I experimented with</li>\n<li>What I liked and did not like</li>\n<li>Other thoughts. I'll try to spare you here. I'm a cutthroat critic of my own cooking</li>\n</ul>\n<p> </p>",
+            "author": {
+                "name": "Tripp Arnold"
+            },
+            "tags": [
+            ],
+            "date_published": "2025-04-30T10:22:08-05:00",
+            "date_modified": "2025-04-30T10:22:08-05:00"
+        }
     ]
 }
