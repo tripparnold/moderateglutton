@@ -3,12 +3,37 @@
     <title>Moderate Glutton</title>
     <link href="https://moderateglutton.com/feed.xml" rel="self" />
     <link href="https://moderateglutton.com" />
-    <updated>2025-04-30T12:14:14-05:00</updated>
+    <updated>2025-04-30T19:11:38-05:00</updated>
     <author>
         <name>Tripp</name>
     </author>
     <id>https://moderateglutton.com</id>
 
+    <entry>
+        <title>My top 5 bites in Tokyo</title>
+        <author>
+            <name>Tripp</name>
+        </author>
+        <link href="https://moderateglutton.com/my-top-5-bites-in-tokyo/"/>
+        <id>https://moderateglutton.com/my-top-5-bites-in-tokyo/</id>
+        <media:content url="https://moderateglutton.com/media/posts/4/chicken_ramen_tokyo.png" medium="image" />
+            <category term="Travel"/>
+            <category term="Japan"/>
+
+        <updated>2025-04-30T19:08:42-05:00</updated>
+            <summary>
+                <![CDATA[
+                        <img src="https://moderateglutton.com/media/posts/4/chicken_ramen_tokyo.png" alt="" />
+                    TBD
+                ]]>
+            </summary>
+        <content type="html">
+            <![CDATA[
+                    <p><img src="https://moderateglutton.com/media/posts/4/chicken_ramen_tokyo.png" class="type:primaryImage" alt="" /></p>
+                <p>TBD</p>
+            ]]>
+        </content>
+    </entry>
     <entry>
         <title>What I Cooked This Week: April 27–May 3</title>
         <author>
