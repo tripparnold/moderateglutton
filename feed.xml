@@ -3,12 +3,63 @@
     <title>Moderate Glutton</title>
     <link href="https://moderateglutton.com/feed.xml" rel="self" />
     <link href="https://moderateglutton.com" />
-    <updated>2025-05-05T14:38:39-05:00</updated>
+    <updated>2025-05-05T14:52:15-05:00</updated>
     <author>
         <name>Tripp</name>
     </author>
     <id>https://moderateglutton.com</id>
 
+    <entry>
+        <title>What I Cooked This Week: May 4 - May 10</title>
+        <author>
+            <name>Tripp</name>
+        </author>
+        <link href="https://moderateglutton.com/what-i-cooked-this-week-may-4-may-10/"/>
+        <id>https://moderateglutton.com/what-i-cooked-this-week-may-4-may-10/</id>
+        <media:content url="https://moderateglutton.com/media/posts/7/may4_vinegarchicken-2.jpeg" medium="image" />
+            <category term="In The Kitchen"/>
+            <category term="French Cooking"/>
+            <category term="Dinner Log"/>
+            <category term="Chicken"/>
+
+        <updated>2025-05-05T14:40:00-05:00</updated>
+            <summary>
+                <![CDATA[
+                        <img src="https://moderateglutton.com/media/posts/7/may4_vinegarchicken-2.jpeg" alt="" />
+                    A running list of what I am cooking. Use it for ideas, inspiration, or just to entertain your boredom. I’ll keep it simple. Each entry will include: What I cooked (don't worry, there's always a photo) What I experimented with What I liked and disliked&hellip;
+                ]]>
+            </summary>
+        <content type="html">
+            <![CDATA[
+                    <p><img src="https://moderateglutton.com/media/posts/7/may4_vinegarchicken-2.jpeg" class="type:primaryImage" alt="" /></p>
+                <h5>A running list of what I am cooking. Use it for ideas, inspiration, or just to entertain your boredom. I’ll keep it simple. Each entry will include:</h5>
+<ul>
+<li>What I cooked (don't worry, there's always a photo)</li>
+<li>What I experimented with</li>
+<li>What I liked and disliked</li>
+<li>Other thoughts (I'll try to spare you here - I'm a cutthroat critic of my own cooking)</li>
+</ul>
+<p> </p>
+<h3>May 4, 2025</h3>
+<h5>Poulet au Vinaigre <strong><em>(Samin Nosrat's recipe...slightly modified)</em></strong></h5>
+<p>AKA vinegar chicken. One of the best meals I’ve had in a while—bright, rich, oniony (and oniony... and oniony). Pure comfort food. The photo’s nothing special, but you'd understand if you tasted it.</p>
+<figure class="post__image post__image--center"><img loading="lazy"  src="https://moderateglutton.com/media/posts/7/may4_vinegarchicken.jpeg" alt="Poulet au Vinaigre from Salt, Fat, Acid, Heat" width="550" height="550" sizes="(max-width: 1920px) 100vw, 1920px" srcset="https://moderateglutton.com/media/posts/7/responsive/may4_vinegarchicken-xs.jpeg 640w ,https://moderateglutton.com/media/posts/7/responsive/may4_vinegarchicken-sm.jpeg 768w ,https://moderateglutton.com/media/posts/7/responsive/may4_vinegarchicken-md.jpeg 1024w ,https://moderateglutton.com/media/posts/7/responsive/may4_vinegarchicken-lg.jpeg 1366w ,https://moderateglutton.com/media/posts/7/responsive/may4_vinegarchicken-xl.jpeg 1600w ,https://moderateglutton.com/media/posts/7/responsive/may4_vinegarchicken-2xl.jpeg 1920w"></figure>
+<p><span style="text-decoration: underline;">What I experimented with:</span></p>
+<ul>
+<li>Not much. I used deboned chicken thighs instead of a whole chicken. Any benefit from keeping the bones on felt pretty trivial—this version still delivered.</li>
+</ul>
+<figure class="post__image"><img loading="lazy"  src="undefined" alt="" data-is-external-image="true"></figure><span style="text-decoration: underline;">What I liked and disliked</span></p>
+<ul>
+<li>✅ Bright and rich - a perfect contrast</li>
+<li>❌ Not a particularly quick meal. I don't mind a long cook, but maybe you do.</li>
+</ul>
+<h5>Takeaway:</h5>
+<h5>A classic French comfort dish: creamy, bright, rich, and deeply warming. It doesn’t look fancy—but this is what good food feels like.</h5>
+<p><strong>Rating: 9.5/10</strong></p>
+<h3> </h3>
+            ]]>
+        </content>
+    </entry>
     <entry>
         <title>Ongoing Experiment: Pizza</title>
         <author>
