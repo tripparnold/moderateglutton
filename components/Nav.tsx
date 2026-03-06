@@ -10,19 +10,47 @@ const links = [
   { href: '/recipes', label: 'Recipes' },
 ];
 
-// Light-mode logo: black PNG → terracotta
+// Black PNG → terracotta (light mode)
 const LOGO_FILTER_LIGHT =
   'brightness(0) sepia(1) hue-rotate(-12deg) saturate(1.4) brightness(0.72)';
-// Dark-mode logo: black PNG → warm cream
+// Black PNG → warm cream (dark mode)
 const LOGO_FILTER_DARK =
   'brightness(0) invert(1) sepia(0.15) saturate(0.6) brightness(0.95)';
 
-// ── Dark-mode persistence ────────────────────────────────────────
 function getInitialTheme(): boolean {
   if (typeof window === 'undefined') return false;
   const stored = localStorage.getItem('mg-theme');
   if (stored) return stored === 'dark';
   return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+// ── SVG icons ────────────────────────────────────────────────────
+function SunIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8"/>
+      <line x1="12" y1="2"  x2="12" y2="5"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="2"  y1="12" x2="5"  y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="4.2"  y1="4.2"  x2="6.3"  y2="6.3"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="17.7" y1="17.7" x2="19.8" y2="19.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="4.2"  y1="19.8" x2="6.3"  y2="17.7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="17.7" y1="6.3"  x2="19.8" y2="4.2"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+        stroke="currentColor" strokeWidth="1.8"
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 export default function Nav() {
@@ -37,7 +65,7 @@ export default function Nav() {
   const inputRef  = useRef<HTMLInputElement>(null);
   const debouncer = useRef<ReturnType<typeof setTimeout>>();
 
-  // ── Theme init (runs once on mount) ────────────────────────────
+  // Theme init
   useEffect(() => {
     const dark = getInitialTheme();
     setIsDark(dark);
@@ -51,22 +79,18 @@ export default function Nav() {
     localStorage.setItem('mg-theme', next ? 'dark' : 'light');
   }
 
-  // ── Route change: close overlays ─────────────────────────────
   useEffect(() => { setMenuOpen(false); setSearchOpen(false); }, [pathname]);
 
-  // ── Body scroll lock ─────────────────────────────────────────
   useEffect(() => {
     document.body.style.overflow = (menuOpen || searchOpen) ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen, searchOpen]);
 
-  // ── Search modal focus ────────────────────────────────────────
   useEffect(() => {
     if (searchOpen) setTimeout(() => inputRef.current?.focus(), 50);
     else { setQuery(''); setResults([]); }
   }, [searchOpen]);
 
-  // ── Menu click-outside ────────────────────────────────────────
   useEffect(() => {
     function handler(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node))
@@ -76,23 +100,15 @@ export default function Nav() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // ── Keyboard shortcuts ────────────────────────────────────────
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setSearchOpen(true);
-      }
-      if (e.key === 'Escape') {
-        setSearchOpen(false);
-        setMenuOpen(false);
-      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setSearchOpen(true); }
+      if (e.key === 'Escape') { setSearchOpen(false); setMenuOpen(false); }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // ── Debounced search ──────────────────────────────────────────
   function handleQuery(val: string) {
     setQuery(val);
     clearTimeout(debouncer.current);
@@ -109,19 +125,23 @@ export default function Nav() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-sand/95 backdrop-blur-sm border-b border-border transition-colors duration-300">
+      {/*
+        z-[800] sits above Leaflet's highest internal layer (popups at ~700).
+        backdrop-blur is only on the header bar itself; the dropdown is fully opaque.
+      */}
+      <header className="sticky top-0 z-[800] bg-sand/95 backdrop-blur-sm border-b border-border transition-colors duration-300">
         <div className="w-full px-5 h-16 flex items-center justify-between">
 
-          {/* Logo — far left */}
+          {/* Logo — clean filename, no spaces */}
           <Link href="/" aria-label="Moderate Glutton — home">
             <Image
-              src="/media/website/moderateglutton_logos/The Moderate Glutton Black Logo Icon Transparent File.png"
+              src="/media/website/logo-icon.png"
               alt="Moderate Glutton"
               width={52}
               height={52}
               style={{
                 width: 'auto',
-                height: '48px',
+                height: '44px',
                 objectFit: 'contain',
                 filter: isDark ? LOGO_FILTER_DARK : LOGO_FILTER_LIGHT,
                 transition: 'filter 0.3s ease',
@@ -137,7 +157,7 @@ export default function Nav() {
             <button
               onClick={() => setSearchOpen(true)}
               aria-label="Search (⌘K)"
-              className="flex items-center gap-1.5 text-tan hover:text-espresso transition-colors p-2 rounded"
+              className="text-tan hover:text-espresso transition-colors p-2 rounded"
             >
               <svg width="19" height="19" viewBox="0 0 19 19" fill="none" aria-hidden="true">
                 <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.6"/>
@@ -166,10 +186,15 @@ export default function Nav() {
                 <nav
                   id="site-menu"
                   aria-label="Site navigation"
-                  className="absolute right-0 top-[calc(100%+10px)] bg-sand border border-border rounded-xl shadow-xl min-w-[210px] py-2 z-50"
+                  /*
+                    z-[810]: above the header (z-[800]).
+                    bg-sand with NO opacity modifier = fully opaque.
+                    Explicit background-color style as fallback for CSS-var theming.
+                  */
+                  className="absolute right-0 top-[calc(100%+10px)] border border-border rounded-xl shadow-2xl min-w-[210px] py-2 z-[810]"
+                  style={{ backgroundColor: 'var(--color-sand)' }}
                 >
-                  <Link
-                    href="/"
+                  <Link href="/"
                     className={`block px-5 py-3 text-base transition-colors ${pathname === '/' ? 'text-terracotta' : 'text-espresso hover:text-terracotta'}`}
                   >
                     Home
@@ -178,9 +203,7 @@ export default function Nav() {
                   <div className="my-1.5 mx-4 border-t border-border" aria-hidden="true"/>
 
                   {links.map(({ href, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
+                    <Link key={href} href={href}
                       className={`block px-5 py-3 text-base transition-colors ${isActive(href) ? 'text-terracotta' : 'text-espresso hover:text-terracotta'}`}
                     >
                       {label}
@@ -189,43 +212,14 @@ export default function Nav() {
 
                   <div className="my-1.5 mx-4 border-t border-border" aria-hidden="true"/>
 
-                  {/* Dark mode toggle */}
+                  {/* Dark mode — icon only, no text label */}
                   <button
                     onClick={() => { toggleTheme(); setMenuOpen(false); }}
-                    className="w-full flex items-center gap-3 px-5 py-3 text-base text-espresso hover:text-terracotta transition-colors"
+                    className="w-full flex items-center justify-center py-3 text-espresso hover:text-terracotta transition-colors"
                     aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                    title={isDark ? 'Light mode' : 'Dark mode'}
                   >
-                    {isDark ? (
-                      /* Sun icon — shown in dark mode */
-                      <>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8"/>
-                          <line x1="12" y1="2"  x2="12" y2="5"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                          <line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                          <line x1="2"  y1="12" x2="5"  y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                          <line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                          <line x1="4.2"  y1="4.2"  x2="6.3"  y2="6.3"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                          <line x1="17.7" y1="17.7" x2="19.8" y2="19.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                          <line x1="4.2"  y1="19.8" x2="6.3"  y2="17.7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                          <line x1="17.7" y1="6.3"  x2="19.8" y2="4.2"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                        </svg>
-                        <span>Light mode</span>
-                      </>
-                    ) : (
-                      /* Crescent moon icon — shown in light mode */
-                      <>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path
-                            d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        <span>Dark mode</span>
-                      </>
-                    )}
+                    {isDark ? <SunIcon /> : <MoonIcon />}
                   </button>
                 </nav>
               )}
@@ -234,20 +228,16 @@ export default function Nav() {
         </div>
       </header>
 
-      {/* ── Search overlay — z-[9999] to clear Leaflet and everything else ── */}
+      {/* Search overlay */}
       {searchOpen && (
         <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Search"
+          role="dialog" aria-modal="true" aria-label="Search"
           className="fixed inset-0 z-[9999] flex flex-col items-center pt-[12vh] px-4"
           style={{ background: 'rgba(25,17,10,0.65)', backdropFilter: 'blur(8px)' }}
-          onClick={(e) => {
-            // Close when clicking the backdrop (not the modal panel)
-            if (e.target === e.currentTarget) setSearchOpen(false);
-          }}
+          onClick={(e) => { if (e.target === e.currentTarget) setSearchOpen(false); }}
         >
-          <div className="w-full max-w-xl bg-sand rounded-2xl shadow-2xl overflow-hidden border border-border">
+          <div className="w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden border border-border"
+               style={{ backgroundColor: 'var(--color-sand)' }}>
 
             <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
               <svg width="18" height="18" viewBox="0 0 19 19" fill="none" className="text-muted flex-shrink-0" aria-hidden="true">
@@ -280,27 +270,19 @@ export default function Nav() {
                       className="flex gap-4 items-start px-5 py-3.5 hover:bg-linen transition-colors"
                       onClick={() => setSearchOpen(false)}
                     >
-                      <span className="text-xs uppercase tracking-widest text-lapis w-16 flex-shrink-0 pt-0.5 font-medium">
-                        {r.section}
-                      </span>
+                      <span className="text-xs uppercase tracking-widest text-lapis w-16 flex-shrink-0 pt-0.5 font-medium">{r.section}</span>
                       <div>
                         <p className="text-espresso font-medium text-sm leading-snug">{r.title}</p>
-                        {r.description && (
-                          <p className="text-muted text-xs mt-0.5 line-clamp-1">{r.description}</p>
-                        )}
+                        {r.description && <p className="text-muted text-xs mt-0.5 line-clamp-1">{r.description}</p>}
                       </div>
                     </Link>
                   </li>
                 ))}
               </ul>
             ) : query.length > 1 ? (
-              <p className="px-5 py-8 text-sm text-muted text-center">
-                No results for &ldquo;{query}&rdquo;
-              </p>
+              <p className="px-5 py-8 text-sm text-muted text-center">No results for &ldquo;{query}&rdquo;</p>
             ) : (
-              <p className="px-5 py-6 text-xs text-muted text-center">
-                Type to search — or press ⌘K anytime
-              </p>
+              <p className="px-5 py-6 text-xs text-muted text-center">Type to search — or press ⌘K anytime</p>
             )}
           </div>
         </div>

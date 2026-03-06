@@ -10,8 +10,6 @@ heroCaption: "Simple and beautiful"
 
 We'd eaten half a watermelon over the weekend, and what was left had gone soft. I wasn't about to toss it, so I turned it into something colder, sharper—and slightly worse for you. Lime gives it balance, mint adds a quiet lift, and somehow it tastes like I meant to do it all along. This is a practical way to use your leftover watermelon and to extend its greatness.
 
-**Gallery:**
-
 - ![The base](/media/posts/9/gallery/IMG_5181.jpeg) *The base*
 - ![ICE-100 going to town](/media/posts/9/gallery/IMG_5189.jpeg) *ICE-100 going to town*
 - ![The End](/media/posts/9/gallery/watermelonlime_sorbet.jpeg) *The End*

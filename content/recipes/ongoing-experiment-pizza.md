@@ -46,7 +46,6 @@ Below is a running log of the journey. The most recent pies will be at the top.
 
 ![May 13th pizza](/media/posts/6/IMG_5279.jpeg)
 
-**Gallery:**
 - ![Airy crust but too thick of pizza](/media/posts/6/gallery/IMG_5282.jpeg) *Airy crust but too thick of pizza*
 - ![Undercarriage of pizza. Looked ok but can improve](/media/posts/6/gallery/IMG_5283.jpeg) *Undercarriage of pizza. Looked ok but can improve*
 - ![Attempted foccacia with unused dough](/media/posts/6/gallery/IMG_5274.jpeg) *Attempted foccacia with unused dough*
@@ -74,7 +73,6 @@ Below is a running log of the journey. The most recent pies will be at the top.
 
 ![May 6th pizza. Super airy crust and cooked to perfection.](/media/posts/6/pizza_cooked2.jpeg)
 
-**Gallery:**
 - ![Proofed dough](/media/posts/6/gallery/dough_split.jpeg) *Proofed dough*
 - ![Sauced](/media/posts/6/gallery/dough_sauced.jpeg) *Sauced*
 - ![Undercarriage of pizza had nice browning](/media/posts/6/gallery/pizza_undercarriage.jpeg) *Undercarriage of pizza had nice browning*
@@ -91,7 +89,6 @@ Below is a running log of the journey. The most recent pies will be at the top.
 - **Bulk Ferment & Proof Time**: Fermented 42 hr in fridge, then shaped into 2 balls and proofed for 4.5 hours in containers on counter.
 - **Cook Method**: baking steel. 500F. Turned every 3-4 minutes until cooked
 
-**Gallery:**
 - ![May 1st - Pizza dough after saucing](/media/posts/6/gallery/IMG_5135.jpeg)
 - ![May 1st - Pizza dough after topping](/media/posts/6/gallery/IMG_5136.jpeg)
 - ![May 1st - Final pizza after the cook](/media/posts/6/gallery/IMG_5139.jpeg)

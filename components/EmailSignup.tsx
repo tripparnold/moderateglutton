@@ -63,7 +63,7 @@ export default function EmailSignup() {
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="bg-terracotta text-sand text-sm px-4 py-2 rounded border-2 border-terracotta hover:bg-clay hover:border-clay disabled:opacity-50 transition-colors whitespace-nowrap font-medium"
+            className="bg-espresso text-sand text-sm px-4 py-2 rounded border-2 border-espresso hover:bg-terracotta hover:border-terracotta disabled:opacity-50 transition-colors whitespace-nowrap font-medium"
           >
             {status === 'loading' ? 'Saving…' : 'Save Me A Seat'}
           </button>

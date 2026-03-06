@@ -111,17 +111,17 @@ export default async function PostPage({ params }: Props) {
         )}
       </header>
 
-      {/* Hero image — shorter aspect ratio so article starts sooner */}
+      {/* Hero image — square crop, half-width so article is immediately accessible */}
       {heroImage && (
         <div
-          className="relative w-full mb-10 overflow-hidden rounded-xl"
-          style={{ aspectRatio: '21/9' }}
+          className="relative mb-10 overflow-hidden rounded-xl mx-auto"
+          style={{ aspectRatio: '1/1', width: 'min(340px, 100%)' }}
         >
           <Image
             src={heroImage}
             alt={title}
             fill
-            sizes="(max-width: 768px) 100vw, 768px"
+            sizes="340px"
             className="object-cover"
             priority
           />

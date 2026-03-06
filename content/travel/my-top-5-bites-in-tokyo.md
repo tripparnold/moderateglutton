@@ -25,8 +25,6 @@ The tiny little city of Tokyo, Japan hosts roughly 137,000 restaurants (per the 
 
 ![Kohada on rice at Togoshi Ginza Sushi Bando](/media/posts/4/kohada.jpeg)
 
-**Gallery — Togoshi Ginza Sushi Bando:**
-
 - ![Bonito](/media/posts/4/gallery/IMG_4960.jpeg) *Bonito*
 - ![Seared scallop (feat Amber)](/media/posts/4/gallery/IMG_4961.jpeg) *Seared scallop (feat Amber)*
 - ![Oyster](/media/posts/4/gallery/IMG_4972.jpeg) *Oyster*
@@ -34,8 +32,6 @@ The tiny little city of Tokyo, Japan hosts roughly 137,000 restaurants (per the 
 ### A5 Wagyu Skewer from Tsujiki Market
 
 ![A5 Wagyu skewer being grilled at Tsujiki Market in Tokyo](/media/posts/4/wagyu_skewer.jpeg)
-
-**Gallery — Tsujiki Market:**
 
 - ![Shrimp tempura from Tsujiki Market](/media/posts/4/gallery/tsujiki_tempura.jpeg)
 - ![Tuna from Tsujiki Market](/media/posts/4/gallery/tsujiki_tuna.jpeg)
