@@ -4,18 +4,22 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        sand:       '#EDE8DF',
-        linen:      '#E5DED3',
-        espresso:   '#2C1810',
-        terracotta: '#A8502A',
-        clay:       '#8B3F20',
-        amber:      '#C4843A',
-        tan:        '#7A6248',
-        muted:      '#9A8A78',
-        border:     '#E2D8CC',
+        // All colors are driven by CSS custom properties.
+        // This lets a single '.dark' class on <html> flip the entire palette.
+        sand:       'var(--color-sand)',
+        linen:      'var(--color-linen)',
+        espresso:   'var(--color-espresso)',
+        terracotta: 'var(--color-terracotta)',
+        clay:       'var(--color-clay)',
+        amber:      'var(--color-amber)',
+        tan:        'var(--color-tan)',
+        muted:      'var(--color-muted)',
+        border:     'var(--color-border)',
+        lapis:      'var(--color-lapis)',
       },
       fontFamily: {
         serif: ['var(--font-cormorant)', 'Georgia', 'serif'],
@@ -23,18 +27,23 @@ module.exports = {
       },
       keyframes: {
         colorShift: {
-          '0%, 100%': { color: '#A8502A' },
-          '33%':      { color: '#C4843A' },
-          '66%':      { color: '#7A6248' },
+          '0%, 100%': { color: 'var(--color-terracotta)' },
+          '33%':      { color: 'var(--color-amber)' },
+          '66%':      { color: 'var(--color-tan)' },
         },
         scrollTrack: {
           '0%':   { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        fadeUp: {
+          '0%':   { opacity: '0', transform: 'translateY(12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         colorShift:  'colorShift 9s ease-in-out infinite',
         scrollTrack: 'scrollTrack 55s linear infinite',
+        fadeUp:      'fadeUp 0.55s ease forwards',
       },
     },
   },

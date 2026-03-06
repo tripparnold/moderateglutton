@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { remark }     from 'remark';
 import remarkHtml     from 'remark-html';
 import { getPostBySlug, getPostSlugs } from '@/lib/posts';
+import RecipeContent from '@/components/RecipeContent';
 
 const VALID_SECTIONS = ['journal', 'travel', 'houston', 'recipes'];
 
@@ -11,13 +12,11 @@ interface Props {
   params: { section: string; slug: string };
 }
 
-// ── Markdown → HTML ──────────────────────────────────────────────
 async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark().use(remarkHtml, { sanitize: false }).process(markdown);
   return result.toString();
 }
 
-// ── Static params ────────────────────────────────────────────────
 export async function generateStaticParams() {
   return VALID_SECTIONS.flatMap((section) =>
     getPostSlugs(section).map((file) => ({
@@ -27,7 +26,6 @@ export async function generateStaticParams() {
   );
 }
 
-// ── Metadata ─────────────────────────────────────────────────────
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!VALID_SECTIONS.includes(params.section)) return {};
   try {
@@ -46,7 +44,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-// ── Page ─────────────────────────────────────────────────────────
 export default async function PostPage({ params }: Props) {
   if (!VALID_SECTIONS.includes(params.section)) notFound();
 
@@ -61,10 +58,10 @@ export default async function PostPage({ params }: Props) {
   const htmlContent = await markdownToHtml(content);
   const isRecipe    = params.section === 'recipes';
 
-  const title:       string  = frontmatter.title       as string;
-  const description: string  = (frontmatter.description as string) ?? '';
-  const heroImage:   string  = (frontmatter.heroImage  as string)  ?? '';
-  const date:        string  = (frontmatter.date        as string)  ?? '';
+  const title:       string = frontmatter.title       as string;
+  const description: string = (frontmatter.description as string) ?? '';
+  const heroImage:   string = (frontmatter.heroImage  as string)  ?? '';
+  const date:        string = (frontmatter.date        as string)  ?? '';
 
   const formattedDate = date
     ? new Date(date).toLocaleDateString('en-US', {
@@ -85,7 +82,7 @@ export default async function PostPage({ params }: Props) {
       </a>
 
       {/* Header */}
-      <header className="mb-8">
+      <header className="mb-6">
         {formattedDate && (
           <time
             dateTime={date}
@@ -95,8 +92,15 @@ export default async function PostPage({ params }: Props) {
           </time>
         )}
 
-        <h1 className="font-serif font-normal text-espresso leading-tight mb-4"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3.25rem)' }}>
+        {/* Section label — lapis accent */}
+        <p className="text-xs font-medium uppercase tracking-widest text-lapis mb-3">
+          {params.section}
+        </p>
+
+        <h1
+          className="font-serif font-normal text-espresso leading-tight mb-4"
+          style={{ fontSize: 'clamp(1.9rem, 5vw, 3rem)' }}
+        >
           {title}
         </h1>
 
@@ -107,10 +111,12 @@ export default async function PostPage({ params }: Props) {
         )}
       </header>
 
-      {/* Hero image */}
+      {/* Hero image — shorter aspect ratio so article starts sooner */}
       {heroImage && (
-        <div className="relative w-full mb-10 overflow-hidden rounded-sm"
-             style={{ aspectRatio: '16/9' }}>
+        <div
+          className="relative w-full mb-10 overflow-hidden rounded-xl"
+          style={{ aspectRatio: '21/9' }}
+        >
           <Image
             src={heroImage}
             alt={title}
@@ -122,11 +128,15 @@ export default async function PostPage({ params }: Props) {
         </div>
       )}
 
-      {/* Body */}
-      <div
-        className={`prose ${isRecipe ? 'prose-recipe' : ''}`}
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
-      />
+      {/* Body — RecipeContent for recipes (scroll-reveal + snap), plain prose otherwise */}
+      {isRecipe ? (
+        <RecipeContent htmlContent={htmlContent} />
+      ) : (
+        <div
+          className="prose"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
+      )}
     </article>
   );
 }

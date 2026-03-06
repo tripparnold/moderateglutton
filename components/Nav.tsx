@@ -10,49 +10,89 @@ const links = [
   { href: '/recipes', label: 'Recipes' },
 ];
 
-// Tints the black logo to match site terracotta (#A8502A)
-const LOGO_FILTER =
+// Light-mode logo: black PNG → terracotta
+const LOGO_FILTER_LIGHT =
   'brightness(0) sepia(1) hue-rotate(-12deg) saturate(1.4) brightness(0.72)';
+// Dark-mode logo: black PNG → warm cream
+const LOGO_FILTER_DARK =
+  'brightness(0) invert(1) sepia(0.15) saturate(0.6) brightness(0.95)';
+
+// ── Dark-mode persistence ────────────────────────────────────────
+function getInitialTheme(): boolean {
+  if (typeof window === 'undefined') return false;
+  const stored = localStorage.getItem('mg-theme');
+  if (stored) return stored === 'dark';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
 
 export default function Nav() {
   const [menuOpen,   setMenuOpen]   = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query,      setQuery]      = useState('');
   const [results,    setResults]    = useState<any[]>([]);
+  const [isDark,     setIsDark]     = useState(false);
+
   const pathname  = usePathname();
   const menuRef   = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLInputElement>(null);
   const debouncer = useRef<ReturnType<typeof setTimeout>>();
 
+  // ── Theme init (runs once on mount) ────────────────────────────
+  useEffect(() => {
+    const dark = getInitialTheme();
+    setIsDark(dark);
+    document.documentElement.classList.toggle('dark', dark);
+  }, []);
+
+  function toggleTheme() {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('mg-theme', next ? 'dark' : 'light');
+  }
+
+  // ── Route change: close overlays ─────────────────────────────
   useEffect(() => { setMenuOpen(false); setSearchOpen(false); }, [pathname]);
 
+  // ── Body scroll lock ─────────────────────────────────────────
   useEffect(() => {
     document.body.style.overflow = (menuOpen || searchOpen) ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen, searchOpen]);
 
+  // ── Search modal focus ────────────────────────────────────────
   useEffect(() => {
     if (searchOpen) setTimeout(() => inputRef.current?.focus(), 50);
     else { setQuery(''); setResults([]); }
   }, [searchOpen]);
 
+  // ── Menu click-outside ────────────────────────────────────────
   useEffect(() => {
     function handler(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+      if (menuRef.current && !menuRef.current.contains(e.target as Node))
+        setMenuOpen(false);
     }
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  // ── Keyboard shortcuts ────────────────────────────────────────
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setSearchOpen(true); }
-      if (e.key === 'Escape') { setSearchOpen(false); setMenuOpen(false); }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+      if (e.key === 'Escape') {
+        setSearchOpen(false);
+        setMenuOpen(false);
+      }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // ── Debounced search ──────────────────────────────────────────
   function handleQuery(val: string) {
     setQuery(val);
     clearTimeout(debouncer.current);
@@ -69,7 +109,7 @@ export default function Nav() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-sand/95 backdrop-blur-sm border-b border-border">
+      <header className="sticky top-0 z-50 bg-sand/95 backdrop-blur-sm border-b border-border transition-colors duration-300">
         <div className="w-full px-5 h-16 flex items-center justify-between">
 
           {/* Logo — far left */}
@@ -79,7 +119,13 @@ export default function Nav() {
               alt="Moderate Glutton"
               width={52}
               height={52}
-              style={{ width: 'auto', height: '48px', objectFit: 'contain', filter: LOGO_FILTER }}
+              style={{
+                width: 'auto',
+                height: '48px',
+                objectFit: 'contain',
+                filter: isDark ? LOGO_FILTER_DARK : LOGO_FILTER_LIGHT,
+                transition: 'filter 0.3s ease',
+              }}
               priority
             />
           </Link>
@@ -99,7 +145,7 @@ export default function Nav() {
               </svg>
             </button>
 
-            {/* Hamburger — no text */}
+            {/* Hamburger */}
             <div ref={menuRef} className="relative">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -120,17 +166,67 @@ export default function Nav() {
                 <nav
                   id="site-menu"
                   aria-label="Site navigation"
-                  className="absolute right-0 top-[calc(100%+10px)] bg-sand border border-border rounded-xl shadow-xl min-w-[190px] py-2 z-50"
+                  className="absolute right-0 top-[calc(100%+10px)] bg-sand border border-border rounded-xl shadow-xl min-w-[210px] py-2 z-50"
                 >
-                  <Link href="/" className={`block px-5 py-3 text-base transition-colors ${pathname === '/' ? 'text-terracotta' : 'text-espresso hover:text-terracotta'}`}>
+                  <Link
+                    href="/"
+                    className={`block px-5 py-3 text-base transition-colors ${pathname === '/' ? 'text-terracotta' : 'text-espresso hover:text-terracotta'}`}
+                  >
                     Home
                   </Link>
+
                   <div className="my-1.5 mx-4 border-t border-border" aria-hidden="true"/>
+
                   {links.map(({ href, label }) => (
-                    <Link key={href} href={href} className={`block px-5 py-3 text-base transition-colors ${isActive(href) ? 'text-terracotta' : 'text-espresso hover:text-terracotta'}`}>
+                    <Link
+                      key={href}
+                      href={href}
+                      className={`block px-5 py-3 text-base transition-colors ${isActive(href) ? 'text-terracotta' : 'text-espresso hover:text-terracotta'}`}
+                    >
                       {label}
                     </Link>
                   ))}
+
+                  <div className="my-1.5 mx-4 border-t border-border" aria-hidden="true"/>
+
+                  {/* Dark mode toggle */}
+                  <button
+                    onClick={() => { toggleTheme(); setMenuOpen(false); }}
+                    className="w-full flex items-center gap-3 px-5 py-3 text-base text-espresso hover:text-terracotta transition-colors"
+                    aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                  >
+                    {isDark ? (
+                      /* Sun icon — shown in dark mode */
+                      <>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8"/>
+                          <line x1="12" y1="2"  x2="12" y2="5"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                          <line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                          <line x1="2"  y1="12" x2="5"  y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                          <line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                          <line x1="4.2"  y1="4.2"  x2="6.3"  y2="6.3"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                          <line x1="17.7" y1="17.7" x2="19.8" y2="19.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                          <line x1="4.2"  y1="19.8" x2="6.3"  y2="17.7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                          <line x1="17.7" y1="6.3"  x2="19.8" y2="4.2"  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                        </svg>
+                        <span>Light mode</span>
+                      </>
+                    ) : (
+                      /* Crescent moon icon — shown in light mode */
+                      <>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path
+                            d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span>Dark mode</span>
+                      </>
+                    )}
+                  </button>
                 </nav>
               )}
             </div>
@@ -138,15 +234,20 @@ export default function Nav() {
         </div>
       </header>
 
-      {/* ── Search overlay ───────────────────────────────────────── */}
+      {/* ── Search overlay — z-[9999] to clear Leaflet and everything else ── */}
       {searchOpen && (
         <div
-          role="dialog" aria-modal="true" aria-label="Search"
-          className="fixed inset-0 z-[100] flex flex-col items-center pt-[12vh] px-4"
-          style={{ background: 'rgba(44,24,16,0.55)', backdropFilter: 'blur(6px)' }}
-          onClick={(e) => { if (e.target === e.currentTarget) setSearchOpen(false); }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Search"
+          className="fixed inset-0 z-[9999] flex flex-col items-center pt-[12vh] px-4"
+          style={{ background: 'rgba(25,17,10,0.65)', backdropFilter: 'blur(8px)' }}
+          onClick={(e) => {
+            // Close when clicking the backdrop (not the modal panel)
+            if (e.target === e.currentTarget) setSearchOpen(false);
+          }}
         >
-          <div className="w-full max-w-xl bg-sand rounded-2xl shadow-2xl overflow-hidden">
+          <div className="w-full max-w-xl bg-sand rounded-2xl shadow-2xl overflow-hidden border border-border">
 
             <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
               <svg width="18" height="18" viewBox="0 0 19 19" fill="none" className="text-muted flex-shrink-0" aria-hidden="true">
@@ -161,7 +262,13 @@ export default function Nav() {
                 placeholder="Search recipes, travel, Houston…"
                 className="flex-1 bg-transparent text-espresso placeholder-muted text-base focus:outline-none"
               />
-              <kbd className="hidden sm:inline text-xs text-muted border border-border rounded px-1.5 py-0.5">esc</kbd>
+              <button
+                onClick={() => setSearchOpen(false)}
+                className="text-xs text-muted border border-border rounded px-1.5 py-0.5 hover:text-espresso transition-colors"
+                aria-label="Close search"
+              >
+                esc
+              </button>
             </div>
 
             {results.length > 0 ? (
@@ -173,19 +280,27 @@ export default function Nav() {
                       className="flex gap-4 items-start px-5 py-3.5 hover:bg-linen transition-colors"
                       onClick={() => setSearchOpen(false)}
                     >
-                      <span className="text-xs uppercase tracking-widest text-muted w-16 flex-shrink-0 pt-0.5">{r.section}</span>
+                      <span className="text-xs uppercase tracking-widest text-lapis w-16 flex-shrink-0 pt-0.5 font-medium">
+                        {r.section}
+                      </span>
                       <div>
                         <p className="text-espresso font-medium text-sm leading-snug">{r.title}</p>
-                        {r.description && <p className="text-muted text-xs mt-0.5 line-clamp-1">{r.description}</p>}
+                        {r.description && (
+                          <p className="text-muted text-xs mt-0.5 line-clamp-1">{r.description}</p>
+                        )}
                       </div>
                     </Link>
                   </li>
                 ))}
               </ul>
             ) : query.length > 1 ? (
-              <p className="px-5 py-8 text-sm text-muted text-center">No results for &ldquo;{query}&rdquo;</p>
+              <p className="px-5 py-8 text-sm text-muted text-center">
+                No results for &ldquo;{query}&rdquo;
+              </p>
             ) : (
-              <p className="px-5 py-6 text-xs text-muted text-center">Type to search — or press ⌘K anytime</p>
+              <p className="px-5 py-6 text-xs text-muted text-center">
+                Type to search — or press ⌘K anytime
+              </p>
             )}
           </div>
         </div>
