@@ -1,3 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ─── Base ─────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-sand text-espresso font-sans;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  /* Focus ring — visible and beautiful */
+  :focus-visible {
+    outline: 2px solid #A8502A;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* ─── Animations ────────────────────────────────────────────────── */
+@keyframes colorShift {
+  0%,  100% { color: #A8502A; }
+  33%        { color: #C4843A; }
+  66%        { color: #7A6248; }
+}
+
+@keyframes scrollTrack {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-colorShift {
+  animation: colorShift 9s ease-in-out infinite;
+}
+
+.scroll-track {
+  animation: scrollTrack 55s linear infinite;
+}
+
+.scroll-container:hover .scroll-track,
+.scroll-container:focus-within .scroll-track {
+  animation-play-state: paused;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-colorShift,
+  .scroll-track {
+    animation: none;
+    color: #A8502A; /* static fallback for welcome heading */
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ─── Prose (article body) ──────────────────────────────────────── */
+.prose {
+  color: #2C1810;
+  max-width: 68ch;
+  font-size: 1.0625rem;
+  line-height: 1.82;
+}
+
+.prose p {
+  margin-top: 0;
+  margin-bottom: 1.4em;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  color: #2C1810;
+  line-height: 1.2;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+
+.prose h1 { font-size: 2.25rem; }
+.prose h2 { font-size: 1.7rem; }
+.prose h3 { font-size: 1.35rem; }
+
+.prose a {
+  color: #A8502A;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #E2D8CC;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+
+.prose a:hover {
+  color: #8B3F20;
+  text-decoration-color: #A8502A;
+}
+
+.prose blockquote {
+  border-left: 3px solid #E2D8CC;
+  padding-left: 1.25rem;
+  margin-left: 0;
+  color: #7A6248;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.1em;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.4em;
+}
+
+.prose li {
+  margin-bottom: 0.35em;
+}
+
+.prose img {
+  border-radius: 4px;
+  margin: 2em auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.prose em { font-style: italic; }
+.prose strong { font-weight: 500; }
+
+.prose hr {
+  border: none;
+  border-top: 1px solid #E2D8CC;
+  margin: 2.5em 0;
+}
+
+/* ─── Recipe-specific prose ─────────────────────────────────────── */
+.prose-recipe h2 {
+  font-size: 1.3rem;
+  margin-top: 1.75em;
+  border-bottom: 1px solid #E2D8CC;
+  padding-bottom: 0.25em;
+}
+
+.prose-recipe ul,
+.prose-recipe ol {
+  font-size: 1rem;
+  line-height: 1.7;
+  padding-left: 1.25rem;
+}
+
+.prose-recipe li {
+  margin-bottom: 0.4em;
+}
+
+/* ─── Utilities ─────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
