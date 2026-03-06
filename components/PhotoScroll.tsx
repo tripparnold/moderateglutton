@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import Link  from 'next/link';
 import Image from 'next/image';
 
@@ -16,107 +16,105 @@ interface Props {
   posts: Post[];
 }
 
-/** Read the current CSS translateX off a transformed element */
-function getTranslateX(el: HTMLElement): number {
-  const matrix = new DOMMatrix(window.getComputedStyle(el).transform);
-  return matrix.m41;
-}
+const SPEED = 0.55; // px per frame at 60 fps (~33 px/sec)
 
 export default function PhotoScroll({ posts }: Props) {
   if (!posts.length) return null;
 
-  const doubled   = [...posts, ...posts];
-  const trackRef  = useRef<HTMLDivElement>(null);
-  const dragging  = useRef(false);
-  const startX    = useRef(0);
-  const startTx   = useRef(0);
-  const resumeTmr = useRef<ReturnType<typeof setTimeout>>();
+  const doubled    = [...posts, ...posts];
+  const trackRef   = useRef<HTMLDivElement>(null);
+  const posRef     = useRef(0);          // current scroll offset (px, always positive)
+  const rafRef     = useRef<number>();
+  const dragging   = useRef(false);
+  const dragStartX = useRef(0);
+  const dragStartPos = useRef(0);
+  const moved      = useRef(0);          // px moved since mousedown (for click vs drag)
+  const halfWidth  = useRef(0);
 
-  // ── Pause / resume helpers ──────────────────────────────────────
-  function pauseAt(tx: number) {
+  // ── Auto-scroll loop ──────────────────────────────────────────────
+  const tick = useCallback(() => {
     const el = trackRef.current;
-    if (!el) return;
-    el.style.animationPlayState = 'paused';
-    el.style.transform          = `translateX(${tx}px)`;
-  }
-
-  function resumeFrom(tx: number) {
-    const el = trackRef.current;
-    if (!el) return;
-    const halfWidth = el.scrollWidth / 2;
-    // Wrap tx into the 0 → -halfWidth range
-    let norm = tx % halfWidth;
-    if (norm > 0) norm -= halfWidth;
-    const progress = Math.abs(norm) / halfWidth;          // 0–1
-    const delay    = -(progress * 55);                    // negative = mid-animation
-    el.style.animationDelay      = `${delay}s`;
-    el.style.transform           = '';
-    el.style.animationPlayState  = 'running';
-  }
-
-  // ── Drag start ──────────────────────────────────────────────────
-  function onDragStart(clientX: number) {
-    if (!trackRef.current) return;
-    clearTimeout(resumeTmr.current);
-    const tx = getTranslateX(trackRef.current);
-    pauseAt(tx);
-    dragging.current = true;
-    startX.current   = clientX;
-    startTx.current  = tx;
-  }
-
-  // ── Drag move ───────────────────────────────────────────────────
-  const onDragMove = useCallback((clientX: number) => {
-    if (!dragging.current || !trackRef.current) return;
-    const delta    = clientX - startX.current;
-    let   newTx    = startTx.current + delta;
-    const halfWidth = trackRef.current.scrollWidth / 2;
-    // Wrap for infinite feel
-    if (newTx > 0)          newTx -= halfWidth;
-    if (newTx < -halfWidth) newTx += halfWidth;
-    trackRef.current.style.transform = `translateX(${newTx}px)`;
+    if (!el || dragging.current) {
+      rafRef.current = requestAnimationFrame(tick);
+      return;
+    }
+    // Measure half-width lazily (after mount, before first scroll)
+    if (!halfWidth.current) {
+      halfWidth.current = el.scrollWidth / 2;
+    }
+    posRef.current += SPEED;
+    if (posRef.current >= halfWidth.current) {
+      posRef.current -= halfWidth.current;
+    }
+    el.style.transform = `translateX(-${posRef.current}px)`;
+    rafRef.current = requestAnimationFrame(tick);
   }, []);
 
-  // ── Drag end ────────────────────────────────────────────────────
-  const onDragEnd = useCallback(() => {
-    if (!dragging.current || !trackRef.current) return;
-    dragging.current = false;
-    const tx = getTranslateX(trackRef.current);
-    // Small delay before resuming so it feels intentional
-    resumeTmr.current = setTimeout(() => resumeFrom(tx), 900);
-  }, []);
-
-  // ── Global mouse / touch listeners ─────────────────────────────
   useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => onDragMove(e.clientX);
-    const onTouchMove = (e: TouchEvent) => onDragMove(e.touches[0].clientX);
-    const onMouseUp   = () => onDragEnd();
-    const onTouchEnd  = () => onDragEnd();
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [tick]);
+
+  // ── Drag handlers ─────────────────────────────────────────────────
+  function startDrag(clientX: number) {
+    dragging.current   = true;
+    dragStartX.current = clientX;
+    dragStartPos.current = posRef.current;
+    moved.current      = 0;
+  }
+
+  const onMove = useCallback((clientX: number) => {
+    if (!dragging.current || !trackRef.current) return;
+    const delta = dragStartX.current - clientX; // positive = dragging left (forward)
+    moved.current = Math.abs(delta);
+
+    if (!halfWidth.current) {
+      halfWidth.current = trackRef.current.scrollWidth / 2;
+    }
+    let next = dragStartPos.current + delta;
+    // Wrap
+    if (next < 0) next += halfWidth.current;
+    if (next >= halfWidth.current) next -= halfWidth.current;
+    posRef.current = next;
+    trackRef.current.style.transform = `translateX(-${next}px)`;
+  }, []);
+
+  const onEnd = useCallback(() => {
+    dragging.current = false;
+  }, []);
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent)  => onMove(e.clientX);
+    const onTouchMove = (e: TouchEvent)  => onMove(e.touches[0].clientX);
+    const onMouseUp   = () => onEnd();
+    const onTouchEnd  = () => onEnd();
 
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup',   onMouseUp);
     window.addEventListener('touchmove', onTouchMove, { passive: true });
     window.addEventListener('touchend',  onTouchEnd);
-
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup',   onMouseUp);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend',  onTouchEnd);
     };
-  }, [onDragMove, onDragEnd]);
+  }, [onMove, onEnd]);
 
   return (
     <div
-      className="scroll-container overflow-hidden w-full select-none"
+      className="overflow-hidden w-full select-none"
       aria-label="Recent articles"
       style={{ cursor: 'grab' }}
-      onMouseDown={(e) => { e.preventDefault(); onDragStart(e.clientX); }}
-      onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
+      onMouseDown={(e) => { e.preventDefault(); startDrag(e.clientX); }}
+      onTouchStart={(e) => startDrag(e.touches[0].clientX)}
     >
       <div
         ref={trackRef}
-        className="scroll-track flex gap-5 w-max py-2 px-4"
+        className="flex gap-5 w-max py-2 px-4"
+        style={{ willChange: 'transform' }}
       >
         {doubled.map((post, i) => (
           <Link
@@ -129,10 +127,8 @@ export default function PhotoScroll({ posts }: Props) {
             className="group relative block flex-shrink-0 w-72 sm:w-80 h-[420px] sm:h-[460px] overflow-hidden rounded-2xl"
             style={{ cursor: 'inherit' }}
             onClick={(e) => {
-              // Suppress navigation if the user was dragging
-              if (Math.abs(getTranslateX(trackRef.current!) - startTx.current) > 8) {
-                e.preventDefault();
-              }
+              // Suppress navigation if the user dragged more than 8 px
+              if (moved.current > 8) e.preventDefault();
             }}
           >
             <Image
