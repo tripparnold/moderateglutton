@@ -1,112 +1,110 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+
+const links = [
+  { href: '/houston', label: 'Houston' },
+  { href: '/recipes', label: 'Recipes' },
+];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+  const pathname        = usePathname();
+  const menuRef         = useRef<HTMLDivElement>(null);
 
-  // Close menu on route change
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  // Close on route change
+  useEffect(() => { setOpen(false); }, [pathname]);
 
-  // Prevent body scroll when menu is open
+  // Prevent body scroll when open
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
-  const links = [
-    { href: '/recipes', label: 'Recipes' },
-    { href: '/houston', label: 'Houston' },
-  ];
+  // Close when clicking outside
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const isActive = (href: string) => pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 bg-sand/90 backdrop-blur-sm border-b border-border">
-      <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-sand/95 backdrop-blur-sm border-b border-border">
+      <div className="w-full px-5 h-14 flex items-center justify-between">
 
-        {/* Logo / Site name */}
-        <Link
-          href="/"
-          className="font-serif text-xl font-medium tracking-wide text-espresso hover:text-terracotta transition-colors"
-          aria-label="Moderate Glutton — home"
-        >
-          Moderate Glutton
+        {/* Icon logo — far left */}
+        <Link href="/" aria-label="Moderate Glutton — home">
+          <Image
+            src="/media/website/moderateglutton_logos/The Moderate Glutton Black Logo Icon Transparent File.png"
+            alt="Moderate Glutton"
+            width={40}
+            height={40}
+            style={{ width: 'auto', height: '38px', objectFit: 'contain' }}
+            priority
+          />
         </Link>
 
-        {/* Desktop nav */}
-        <nav aria-label="Main navigation" className="hidden sm:flex items-center gap-7">
-          {links.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`text-sm tracking-wide transition-colors ${
-                isActive(href)
-                  ? 'text-terracotta'
-                  : 'text-tan hover:text-espresso'
-              }`}
+        {/* Menu button — far right */}
+        <div ref={menuRef} className="relative">
+          <button
+            onClick={() => setOpen(!open)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-haspopup="true"
+            aria-controls="site-menu"
+            className="flex items-center gap-2 px-3 py-1.5 rounded border border-border text-tan hover:text-espresso hover:border-tan transition-colors text-sm tracking-wide"
+          >
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+              <line x1="0" y1="1"  x2="16" y2="1"  stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <line x1="0" y1="6"  x2="16" y2="6"  stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <line x1="0" y1="11" x2="16" y2="11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            <span className="hidden sm:inline">Menu</span>
+          </button>
+
+          {/* Dropdown */}
+          {open && (
+            <nav
+              id="site-menu"
+              aria-label="Site navigation"
+              className="absolute right-0 top-[calc(100%+8px)] bg-sand border border-border rounded-lg shadow-lg min-w-[160px] py-2 z-50"
             >
-              {label}
-            </Link>
-          ))}
-        </nav>
+              {/* Home link */}
+              <Link
+                href="/"
+                className={`block px-5 py-2.5 text-sm transition-colors ${
+                  pathname === '/' ? 'text-terracotta' : 'text-espresso hover:text-terracotta'
+                }`}
+              >
+                Home
+              </Link>
 
-        {/* Mobile menu button */}
-        <button
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen(!open)}
-          className="sm:hidden flex flex-col gap-[5px] p-2 -mr-2 rounded"
-        >
-          <span
-            className={`block w-5 h-px bg-espresso transition-transform duration-200 origin-center ${
-              open ? 'rotate-45 translate-y-[6px]' : ''
-            }`}
-          />
-          <span
-            className={`block w-5 h-px bg-espresso transition-opacity duration-200 ${
-              open ? 'opacity-0' : ''
-            }`}
-          />
-          <span
-            className={`block w-5 h-px bg-espresso transition-transform duration-200 origin-center ${
-              open ? '-rotate-45 -translate-y-[6px]' : ''
-            }`}
-          />
-        </button>
-      </div>
+              <div className="my-1 mx-4 border-t border-border" aria-hidden="true" />
 
-      {/* Mobile menu */}
-      {open && (
-        <nav
-          id="mobile-menu"
-          aria-label="Mobile navigation"
-          className="sm:hidden border-t border-border bg-sand"
-        >
-          <ul className="flex flex-col py-2">
-            {links.map(({ href, label }) => (
-              <li key={href}>
+              {links.map(({ href, label }) => (
                 <Link
+                  key={href}
                   href={href}
-                  className={`block px-5 py-3 text-base transition-colors ${
-                    isActive(href)
-                      ? 'text-terracotta'
-                      : 'text-espresso hover:text-terracotta'
+                  className={`block px-5 py-2.5 text-sm transition-colors ${
+                    isActive(href) ? 'text-terracotta' : 'text-espresso hover:text-terracotta'
                   }`}
                 >
                   {label}
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
+              ))}
+            </nav>
+          )}
+        </div>
+      </div>
     </header>
   );
 }

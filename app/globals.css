@@ -11,11 +11,12 @@
   }
 
   body {
-    background-color: #FAF8F3;
+    background-color: #EDE8DF;
     color: #2C1810;
     font-family: var(--font-inter), system-ui, sans-serif;
     font-size: 1rem;
     line-height: 1.75;
+    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><circle cx='14' cy='15' r='9' fill='%234a7c35'/><path d='M14 6 Q11.5 10 11.5 15 Q11.5 20 14 24' stroke='%233a6228' stroke-width='0.6' fill='none'/><path d='M14 6 Q16.5 10 16.5 15 Q16.5 20 14 24' stroke='%233a6228' stroke-width='0.6' fill='none'/><line x1='14' y1='6' x2='14' y2='3' stroke='%23c8b040' stroke-width='1.2' stroke-linecap='round'/><line x1='19.5' y1='8' x2='21.5' y2='6' stroke='%23c8b040' stroke-width='1.2' stroke-linecap='round'/><line x1='23' y1='13.5' x2='26' y2='13' stroke='%23c8b040' stroke-width='1.2' stroke-linecap='round'/><line x1='21' y1='20' x2='23' y2='22' stroke='%23c8b040' stroke-width='1.2' stroke-linecap='round'/><line x1='8.5' y1='8' x2='6.5' y2='6' stroke='%23c8b040' stroke-width='1.2' stroke-linecap='round'/><line x1='5' y1='13.5' x2='2' y2='13' stroke='%23c8b040' stroke-width='1.2' stroke-linecap='round'/><line x1='7' y1='20' x2='5' y2='22' stroke='%23c8b040' stroke-width='1.2' stroke-linecap='round'/><line x1='14' y1='24' x2='14' y2='27' stroke='%23c8b040' stroke-width='1.2' stroke-linecap='round'/><ellipse cx='14' cy='26.5' rx='4' ry='1.2' fill='%238b7355' opacity='0.5'/></svg>") 14 14, auto;
   }
 
   /* Focus ring — visible and beautiful */
