@@ -4,12 +4,12 @@ import Link             from 'next/link';
 import Image            from 'next/image';
 import { getAllPosts }  from '@/lib/posts';
 
-const VALID_SECTIONS = ['journal', 'travel', 'houston', 'recipes'];
+// 'houston' is intentionally excluded — it has its own dedicated page at app/houston/page.tsx
+const VALID_SECTIONS = ['journal', 'travel', 'recipes'];
 
 const SECTION_LABELS: Record<string, string> = {
   journal:  'Journal',
   travel:   'Travel',
-  houston:  'Houston',
   recipes:  'Recipes',
 };
 
