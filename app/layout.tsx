@@ -19,12 +19,14 @@ const inter = Inter({
   display:  'swap',
 });
 
+const DESCRIPTION = 'Recipes worth making again, a running guide to Houston restaurants, and notes from eating around the world — by a home cook, engineer, and Type 1 diabetic.';
+
 export const metadata: Metadata = {
   title: {
     default:  'Moderate Glutton',
     template: '%s | Moderate Glutton',
   },
-  description: 'A home cook, engineer, and Type 1 diabetic who overthinks just about every meal.',
+  description: DESCRIPTION,
   metadataBase: new URL('https://moderateglutton.com'),
   keywords: ['food blog', 'home cooking', 'recipes', 'Houston restaurants', 'travel food', 'Type 1 diabetic cooking'],
   authors: [{ name: 'Tripp Arnold' }],
@@ -33,7 +35,7 @@ export const metadata: Metadata = {
     type:        'website',
     url:         'https://moderateglutton.com',
     title:       'Moderate Glutton',
-    description: 'A home cook, engineer, and Type 1 diabetic who overthinks just about every meal.',
+    description: DESCRIPTION,
     images: [
       {
         url:    '/media/website/logo-icon.png',
@@ -46,7 +48,7 @@ export const metadata: Metadata = {
   twitter: {
     card:        'summary_large_image',
     title:       'Moderate Glutton',
-    description: 'A home cook, engineer, and Type 1 diabetic who overthinks just about every meal.',
+    description: DESCRIPTION,
     images:      ['/media/website/logo-icon.png'],
   },
   icons: {

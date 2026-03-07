@@ -16,7 +16,9 @@ interface Props {
   posts: Post[];
 }
 
-const SPEED = 0.55; // px per frame at 60 fps (~33 px/sec)
+const AUTO_SPEED = 0.55; // px per frame at 60 fps (~33 px/sec)
+const FRICTION   = 0.92; // momentum decay per frame (iOS-like feel)
+const MIN_VEL    = 0.25; // below this px/frame, stop momentum
 
 export default function PhotoScroll({ posts }: Props) {
   if (!posts.length) return null;
@@ -31,63 +33,112 @@ export default function PhotoScroll({ posts }: Props) {
   const moved      = useRef(0);          // px moved since mousedown (for click vs drag)
   const halfWidth  = useRef(0);
 
-  // ── Auto-scroll loop ──────────────────────────────────────────────
-  const tick = useCallback(() => {
-    const el = trackRef.current;
-    if (!el || dragging.current) {
-      rafRef.current = requestAnimationFrame(tick);
+  // Velocity tracking for momentum
+  const lastClientX   = useRef(0);
+  const lastTimestamp = useRef(0);
+  const velocityRef   = useRef(0);      // px/frame (positive = scroll forward/left)
+  const momentumRef   = useRef(false);  // true while momentum is coasting
+  const momentumRaf   = useRef<number>();
+
+  // ── Helpers ───────────────────────────────────────────────────────
+  const getHalfWidth = useCallback(() => {
+    if (!halfWidth.current && trackRef.current) {
+      halfWidth.current = trackRef.current.scrollWidth / 2;
+    }
+    return halfWidth.current;
+  }, []);
+
+  const applyPos = useCallback((pos: number) => {
+    const hw = getHalfWidth();
+    if (hw === 0) return;
+    let next = pos % hw;
+    if (next < 0) next += hw;
+    posRef.current = next;
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(-${next}px)`;
+    }
+  }, [getHalfWidth]);
+
+  // ── Momentum animation loop ───────────────────────────────────────
+  const runMomentum = useCallback(() => {
+    velocityRef.current *= FRICTION;
+
+    if (Math.abs(velocityRef.current) < MIN_VEL) {
+      momentumRef.current = false;
+      // Resume auto-scroll naturally from current position
       return;
     }
-    // Measure half-width lazily (after mount, before first scroll)
-    if (!halfWidth.current) {
-      halfWidth.current = el.scrollWidth / 2;
+
+    applyPos(posRef.current + velocityRef.current);
+    momentumRaf.current = requestAnimationFrame(runMomentum);
+  }, [applyPos]);
+
+  // ── Auto-scroll loop ──────────────────────────────────────────────
+  const tick = useCallback(() => {
+    if (!dragging.current && !momentumRef.current) {
+      applyPos(posRef.current + AUTO_SPEED);
     }
-    posRef.current += SPEED;
-    if (posRef.current >= halfWidth.current) {
-      posRef.current -= halfWidth.current;
-    }
-    el.style.transform = `translateX(-${posRef.current}px)`;
     rafRef.current = requestAnimationFrame(tick);
-  }, []);
+  }, [applyPos]);
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(tick);
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current)   cancelAnimationFrame(rafRef.current);
+      if (momentumRaf.current) cancelAnimationFrame(momentumRaf.current);
     };
   }, [tick]);
 
   // ── Drag handlers ─────────────────────────────────────────────────
   function startDrag(clientX: number) {
-    dragging.current   = true;
-    dragStartX.current = clientX;
+    // Cancel any running momentum
+    if (momentumRaf.current) cancelAnimationFrame(momentumRaf.current);
+    momentumRef.current = false;
+
+    dragging.current     = true;
+    dragStartX.current   = clientX;
     dragStartPos.current = posRef.current;
-    moved.current      = 0;
+    moved.current        = 0;
+
+    lastClientX.current   = clientX;
+    lastTimestamp.current = performance.now();
+    velocityRef.current   = 0;
   }
 
   const onMove = useCallback((clientX: number) => {
     if (!dragging.current || !trackRef.current) return;
-    const delta = dragStartX.current - clientX; // positive = dragging left (forward)
+
+    const now   = performance.now();
+    const dt    = now - lastTimestamp.current;
+    const delta = dragStartX.current - clientX; // positive = scrolling forward (left)
     moved.current = Math.abs(delta);
 
-    if (!halfWidth.current) {
-      halfWidth.current = trackRef.current.scrollWidth / 2;
+    // Compute instantaneous velocity in px/ms, then convert to px/frame (~60fps)
+    if (dt > 0) {
+      const rawVel = (lastClientX.current - clientX) / dt; // px/ms
+      // Blend with previous for smoother velocity reading
+      velocityRef.current = velocityRef.current * 0.3 + rawVel * 16.67 * 0.7;
     }
-    let next = dragStartPos.current + delta;
-    // Wrap
-    if (next < 0) next += halfWidth.current;
-    if (next >= halfWidth.current) next -= halfWidth.current;
-    posRef.current = next;
-    trackRef.current.style.transform = `translateX(-${next}px)`;
-  }, []);
+    lastClientX.current   = clientX;
+    lastTimestamp.current = now;
+
+    applyPos(dragStartPos.current + delta);
+  }, [applyPos]);
 
   const onEnd = useCallback(() => {
     dragging.current = false;
-  }, []);
+
+    // Kick off momentum if there's meaningful velocity
+    if (Math.abs(velocityRef.current) > MIN_VEL) {
+      momentumRef.current = true;
+      if (momentumRaf.current) cancelAnimationFrame(momentumRaf.current);
+      momentumRaf.current = requestAnimationFrame(runMomentum);
+    }
+  }, [runMomentum]);
 
   useEffect(() => {
-    const onMouseMove = (e: MouseEvent)  => onMove(e.clientX);
-    const onTouchMove = (e: TouchEvent)  => onMove(e.touches[0].clientX);
+    const onMouseMove = (e: MouseEvent) => onMove(e.clientX);
+    const onTouchMove = (e: TouchEvent) => onMove(e.touches[0].clientX);
     const onMouseUp   = () => onEnd();
     const onTouchEnd  = () => onEnd();
 

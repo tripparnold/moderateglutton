@@ -47,21 +47,23 @@ export default function RecipeContent({ htmlContent }: Props) {
     targets.forEach((t) => t.classList.add('reveal-target'));
 
     // We do NOT call unobserve — the element stays observed.
-    // When isIntersecting flips false (scrolled away), we remove
-    // is-revealed so the animation replays next time.
+    // When isIntersecting flips false AND intersectionRatio hits 0
+    // (fully off-screen), we remove is-revealed so animation replays.
+    // Using threshold [0, 0.15] prevents flickering at the edge:
+    // elements near the threshold only reset once fully off-screen.
     const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-revealed');
-          } else {
-            // Reset: element is out of view, ready to animate again
+          } else if (entry.intersectionRatio === 0) {
+            // Only reset when element is fully out of view (no flicker)
             entry.target.classList.remove('is-revealed');
           }
         });
       },
       {
-        threshold:  0.15,
+        threshold:  [0, 0.15],
         rootMargin: '0px 0px -8% 0px',
       }
     );
