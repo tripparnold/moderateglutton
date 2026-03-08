@@ -86,6 +86,7 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     note:         '',
     lat:          29.7495,
     lng:          -95.3468,
+    distinctions: { michelin: 'bibgourmand' },
   },
   {
     id:           'maximo',
@@ -699,7 +700,7 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     lat:          29.7511,
     lng:          -95.3875,
     distinctions: {
-      michelin:   'star',
+      michelin:   'recommended',
       jamesBeard: [{ type: 'semifinalist', category: 'Outstanding Hospitality', year: 2024 }],
     },
   },

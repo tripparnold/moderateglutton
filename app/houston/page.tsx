@@ -237,7 +237,12 @@ export default function HoustonPage() {
                     {mapLocations.map(r => (
                       <li key={r.id}>
                         <button onClick={() => setSelected(r.id)} className="w-full text-left px-4 py-3 rounded-xl border border-border hover:border-lapis/40 hover:bg-linen transition-colors">
-                          <p className="font-medium text-espresso text-sm">{r.name}</p>
+                          <div className="flex items-center gap-1.5">
+                            {r.topRank !== undefined && (
+                              <span className="text-[10px] font-bold text-terracotta tabular-nums flex-shrink-0">#{r.topRank}</span>
+                            )}
+                            <p className="font-medium text-espresso text-sm truncate">{r.name}</p>
+                          </div>
                           <div className="flex items-center justify-between mt-0.5 gap-2">
                             <p className="text-xs text-muted">{r.neighborhood}</p>
                             <p className="text-xs text-muted">{r.price}</p>
