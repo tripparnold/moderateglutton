@@ -4,13 +4,13 @@ import Link             from 'next/link';
 import Image            from 'next/image';
 import { getAllPosts }  from '@/lib/posts';
 
-// 'houston' is intentionally excluded — it has its own dedicated page at app/houston/page.tsx
-const VALID_SECTIONS = ['journal', 'travel', 'recipes'];
+// 'houston' has its own dedicated page at app/houston/page.tsx
+// 'recipes' has its own dedicated page at app/recipes/page.tsx
+// 'journal' and 'travel' are retired — content moved to 'spills'
+const VALID_SECTIONS = ['spills'];
 
 const SECTION_LABELS: Record<string, string> = {
-  journal:  'Journal',
-  travel:   'Travel',
-  recipes:  'Recipes',
+  spills: 'Spills',
 };
 
 interface Props {

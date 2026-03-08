@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 const links = [
   { href: '/houston', label: 'Houston' },
   { href: '/recipes', label: 'Recipes' },
+  { href: '/spills',  label: 'Spills'  },
 ];
 
 // Black PNG → terracotta (light mode)

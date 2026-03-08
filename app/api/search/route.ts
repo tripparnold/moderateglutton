@@ -12,7 +12,7 @@ function getContentSections(): string[] {
       .filter((d) => d.isDirectory())
       .map((d) => d.name);
   } catch {
-    return ['houston', 'recipes', 'journal', 'travel'];
+    return ['recipes', 'spills'];
   }
 }
 

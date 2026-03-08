@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     images: [
       {
-        url:    '/media/website/logo-icon.png',
+        url:    '/media/website/og-image.png',
         width:  1200,
         height: 630,
         alt:    'Moderate Glutton',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card:        'summary_large_image',
     title:       'Moderate Glutton',
     description: DESCRIPTION,
-    images:      ['/media/website/logo-icon.png'],
+    images:      ['/media/website/og-image.png'],
   },
   icons: {
     icon:  '/icon.png',

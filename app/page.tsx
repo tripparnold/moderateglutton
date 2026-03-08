@@ -1,7 +1,8 @@
 import PhotoScroll from '@/components/PhotoScroll';
 import { getAllPosts } from '@/lib/posts';
 
-const SECTIONS = ['journal', 'travel', 'houston', 'recipes'] as const;
+// 'spills' excluded from home feed — journal and travel retired
+const SECTIONS = ['recipes'] as const;
 
 function getScrollPosts() {
   const all = SECTIONS.flatMap((section) =>
