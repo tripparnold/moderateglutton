@@ -9,9 +9,11 @@ export type MichelinTier = 'star' | 'bibgourmand' | 'recommended';
 export type PriceTier    = '$' | '$$' | '$$$' | '$$$$';
 
 export interface JBDistinction {
-  type:     'semifinalist' | 'nominee' | 'finalist' | 'winner';
-  category: string;
-  year:     number | number[];
+  type:        'semifinalist' | 'nominee' | 'finalist' | 'winner';
+  category:    string;
+  year:        number | number[];
+  /** true when the nomination is for the chef/restaurateur personally, not the restaurant */
+  chefAward?:  boolean;
 }
 
 export interface Restaurant {
@@ -93,7 +95,7 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisine:      'New Mexican',
     cuisineTags:  ['Mexican', 'Fusion'],
     price:        '$$$',
-    note:         'The room is stunning. The food matches it.',
+    note:         '',
     lat:          29.7345,
     lng:          -95.3904,
     distinctions: { michelin: 'bibgourmand' },
@@ -176,7 +178,7 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     lng:          -95.3408,
     distinctions: {
       michelin:   'bibgourmand',
-      jamesBeard: [{ type: 'winner', category: 'Best Chef: Texas', year: 2023 }],
+      jamesBeard: [{ type: 'winner', category: 'Best Chef: Texas', year: 2023, chefAward: true }],
     },
   },
   {
@@ -264,7 +266,7 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     lat:          29.7459,
     lng:          -95.3920,
     distinctions: {
-      jamesBeard: [{ type: 'winner', category: 'Best Chef: Southwest', year: 2017 }],
+      jamesBeard: [{ type: 'winner', category: 'Best Chef: Southwest', year: 2017, chefAward: true }],
     },
   },
   {
@@ -303,7 +305,7 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     lat:          29.7270,
     lng:          -95.3638,
     distinctions: {
-      jamesBeard: [{ type: 'finalist', category: 'Outstanding Restaurateur', year: 2022 }],
+      jamesBeard: [{ type: 'finalist', category: 'Outstanding Restaurateur', year: 2022, chefAward: true }],
     },
   },
   {
@@ -621,7 +623,7 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     lat:          30.1850,
     lng:          -95.4683,
     distinctions: {
-      jamesBeard: [{ type: 'semifinalist', category: 'Best Chef: Texas', year: 2022 }],
+      jamesBeard: [{ type: 'semifinalist', category: 'Best Chef: Texas', year: 2022, chefAward: true }],
     },
   },
   {
@@ -725,7 +727,7 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     lat:          29.7442,
     lng:          -95.4342,
     distinctions: {
-      jamesBeard: [{ type: 'finalist', category: 'Best Chef: Southwest', year: 2016 }],
+      jamesBeard: [{ type: 'finalist', category: 'Best Chef: Southwest', year: 2016, chefAward: true }],
     },
   },
   {
@@ -833,3 +835,6 @@ export const TOP_10 = RESTAURANTS
 export const THE_REST = RESTAURANTS
   .filter((r) => r.topRank === undefined)
   .sort((a, b) => a.name.localeCompare(b.name));
+
+/** Top 10 (ranked 1–10) followed by the rest alphabetically — single ordered list */
+export const ALL_ORDERED: Restaurant[] = [...TOP_10, ...THE_REST];

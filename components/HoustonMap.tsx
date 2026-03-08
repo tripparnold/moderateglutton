@@ -23,31 +23,40 @@ function renderDistinctions(d: Restaurant['distinctions']): string {
   if (!d) return '';
   const parts: string[] = [];
 
+  // Michelin — icon inline via unicode approximations for the popup context
   if (d.michelin === 'star') {
-    parts.push(`<span style="display:inline-flex;align-items:center;gap:3px;"><span style="color:#E8003D;font-size:13px;">✦</span><span style="color:#2E5E8E;font-size:11px;font-weight:600;">Michelin Star</span></span>`);
+    parts.push(`<span style="display:inline-flex;align-items:center;gap:3px;background:#fde8ec;border:1px solid #fbb8c6;border-radius:999px;padding:1px 7px;">` +
+      `<span style="color:#E8003D;font-size:12px;line-height:1;">✦</span>` +
+      `<span style="color:#C8002D;font-size:10px;font-weight:700;">Michelin Star</span></span>`);
   }
   if (d.michelin === 'bibgourmand') {
-    parts.push(`<span style="display:inline-flex;align-items:center;gap:3px;"><span style="color:#E8003D;font-size:13px;">Ⓑ</span><span style="color:#2E5E8E;font-size:11px;font-weight:600;">Bib Gourmand</span></span>`);
+    parts.push(`<span style="display:inline-flex;align-items:center;gap:3px;background:#fde8ec;border:1px solid #fbb8c6;border-radius:999px;padding:1px 7px;">` +
+      `<span style="color:#E8003D;font-size:12px;line-height:1;">☺</span>` +
+      `<span style="color:#C8002D;font-size:10px;font-weight:700;">Bib Gourmand</span></span>`);
   }
   if (d.michelin === 'recommended') {
-    parts.push(`<span style="color:#2E5E8E;font-size:11px;font-weight:600;">Michelin Recommended</span>`);
+    parts.push(`<span style="display:inline-flex;align-items:center;background:#fff3f4;border:1px solid #f9d0d6;border-radius:999px;padding:1px 7px;">` +
+      `<span style="color:#B8002A;font-size:10px;font-weight:600;">In Michelin Guide</span></span>`);
   }
   if (d.jamesBeard) {
     d.jamesBeard.forEach((jb) => {
-      const yrs   = Array.isArray(jb.year) ? jb.year.join(', ') : String(jb.year);
-      const label = jb.type === 'winner'    ? `James Beard Winner — ${jb.category} (${yrs})`
-                  : jb.type === 'finalist'  ? `James Beard Finalist — ${jb.category} (${yrs})`
-                  : jb.type === 'semifinalist' ? `James Beard Semifinalist — ${jb.category} (${yrs})`
-                  :                           `James Beard Nominated — ${jb.category} (${yrs})`;
-      parts.push(`<span style="color:#2E5E8E;font-size:11px;font-weight:600;">${label}</span>`);
+      const yr    = Array.isArray(jb.year) ? `'${String(jb.year[jb.year.length-1]).slice(-2)}` : `'${String(jb.year).slice(-2)}`;
+      const level = jb.type === 'winner' ? 'Winner' : jb.type === 'finalist' ? 'Finalist' : jb.type === 'semifinalist' ? 'Semifinalist' : 'Nominated';
+      const label = jb.chefAward ? `Chef: JB ${level} ${yr}` : `JB ${level} ${yr}`;
+      const amberBg = jb.chefAward ? '#fffbeb' : '#fef3c7';
+      const amberBd = jb.chefAward ? '#fde68a' : '#f59e0b';
+      const amberTx = jb.chefAward ? '#92400e' : '#78350f';
+      parts.push(`<span style="display:inline-flex;align-items:center;background:${amberBg};border:1px solid ${amberBd};border-radius:999px;padding:1px 7px;">` +
+        `<span style="color:${amberTx};font-size:10px;font-weight:700;">${label}</span></span>`);
     });
   }
   if (d.texasMonthlyBBQ) {
-    parts.push(`<span style="color:#2E5E8E;font-size:11px;font-weight:600;">Texas Monthly Top 50 BBQ</span>`);
+    parts.push(`<span style="display:inline-flex;align-items:center;background:#fff7ed;border:1px solid #fed7aa;border-radius:999px;padding:1px 7px;">` +
+      `<span style="color:#c2410c;font-size:10px;font-weight:700;">Texas Monthly Top 50</span></span>`);
   }
 
   if (!parts.length) return '';
-  return `<div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">${parts.join('')}</div>`;
+  return `<div style="margin-top:6px;display:flex;flex-direction:row;flex-wrap:wrap;gap:4px;">${parts.join('')}</div>`;
 }
 
 function buildPopupHtml(loc: Restaurant): string {
@@ -59,7 +68,6 @@ function buildPopupHtml(loc: Restaurant): string {
       <p style="margin:0 0 6px;font-size:11px;color:#9A8A78;">${loc.neighborhood} · ${loc.price}</p>
       <p style="margin:0 0 8px;font-size:11px;color:#9A8A78;">${loc.address}</p>
       ${distinctions}
-      ${loc.note ? `<p style="margin:${distinctions ? '8' : '0'}px 0 0;font-size:11px;color:#7A6248;font-style:italic;border-left:2px solid #E2D8CC;padding-left:6px;">"${loc.note}"</p>` : ''}
     </div>`;
 }
 
