@@ -90,8 +90,8 @@ const PRICE_TIERS: PriceTier[] = ['$', '$$', '$$$', '$$$$'];
 function RestaurantCard({ restaurant, onSelect }: { restaurant: Restaurant; onSelect: (id: string) => void }) {
   const r = restaurant;
   return (
-    <button onClick={() => onSelect(r.id)} className="group w-full text-left rounded-2xl border border-border bg-linen hover:border-lapis/50 hover:shadow-md transition-all overflow-hidden">
-      <div className="px-5 pt-5 pb-4">
+    <button onClick={() => onSelect(r.id)} className="group w-full h-full text-left rounded-2xl border border-border bg-linen hover:border-lapis/50 hover:shadow-md transition-all overflow-hidden flex flex-col">
+      <div className="px-5 pt-5 pb-4 flex-1">
         <div className="flex items-start justify-between gap-2 mb-2">
           <span className="text-xs font-semibold uppercase tracking-widest text-lapis">{r.cuisine}</span>
           {r.topRank !== undefined && <span className="text-xs font-bold text-terracotta tabular-nums">#{r.topRank}</span>}
@@ -202,8 +202,8 @@ export default function HoustonPage() {
   const [filters,  setFilters]  = useState<Filters>(FILTER_DEFAULT);
 
   const selectedRestaurant = RESTAURANTS.find(r => r.id === selected);
-  const filteredAll        = useMemo(() => applyFilters(ALL_ORDERED, filters),  [filters]);
-  const mapLocations       = useMemo(() => applyFilters(RESTAURANTS, filters), [filters]);
+  const filteredAll        = useMemo(() => applyFilters(ALL_ORDERED, filters), [filters]);
+  const mapLocations       = useMemo(() => applyFilters(ALL_ORDERED, filters), [filters]);
 
   const toggleBtn = (active: boolean) => `px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${active ? 'bg-lapis text-sand border-lapis' : 'bg-transparent text-tan border-border hover:border-lapis hover:text-lapis'}`;
 
@@ -270,7 +270,7 @@ export default function HoustonPage() {
           ) : (
             <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {filteredAll.map(r => (
-                <li key={r.id}>
+                <li key={r.id} className="flex">
                   <RestaurantCard restaurant={r} onSelect={id => { setSelected(id); setView('map'); }} />
                 </li>
               ))}
