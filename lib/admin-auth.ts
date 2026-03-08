@@ -15,6 +15,13 @@ function getSecret(): string {
   return s;
 }
 
+/** Convert ArrayBuffer to hex string — pure Web Crypto, no Buffer needed */
+function arrayBufferToHex(buf: ArrayBuffer): string {
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 async function hmac(message: string, secret: string): Promise<string> {
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -23,7 +30,7 @@ async function hmac(message: string, secret: string): Promise<string> {
     false, ['sign'],
   );
   const sig = await crypto.subtle.sign('HMAC', key, enc.encode(message));
-  return Buffer.from(sig).toString('hex');
+  return arrayBufferToHex(sig);
 }
 
 async function hmacVerify(message: string, secret: string, expected: string): Promise<boolean> {

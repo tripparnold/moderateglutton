@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
-export default function AdminLogin() {
+// Isolated into its own component so it can be wrapped in <Suspense>
+// (Next.js 14 requires this for any client component that calls useSearchParams)
+function AdminLoginForm() {
   const router       = useRouter();
   const searchParams = useSearchParams();
   const [password, setPassword] = useState('');
@@ -38,53 +40,65 @@ export default function AdminLogin() {
   }
 
   return (
+    <>
+      <h1 className="font-serif font-light text-espresso text-2xl text-center mb-1">Admin</h1>
+      <p className="text-muted text-xs text-center mb-8">Moderate Glutton</p>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="password" className="block text-xs font-medium text-muted uppercase tracking-widest mb-2">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoFocus
+            required
+            className="w-full px-4 py-3 rounded-lg border border-border bg-transparent text-espresso placeholder-muted focus:outline-none focus:border-tan transition-colors text-sm"
+            placeholder="Enter admin password"
+          />
+        </div>
+
+        {error && (
+          <p className="text-xs text-red-600 text-center">{error}</p>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 rounded-lg bg-terracotta text-white text-sm font-medium hover:bg-terracotta/90 transition-colors disabled:opacity-60"
+        >
+          {loading ? 'Signing in…' : 'Sign in'}
+        </button>
+      </form>
+    </>
+  );
+}
+
+export default function AdminLogin() {
+  return (
     <div className="min-h-screen flex items-center justify-center px-4"
          style={{ background: 'var(--color-sand)' }}>
       <div className="w-full max-w-sm">
 
-        {/* Logo */}
         <div className="flex justify-center mb-8">
           <Image
             src="/media/website/logo-icon.png"
             alt="Moderate Glutton"
             width={56} height={56}
-            style={{ width: 'auto', height: '52px', objectFit: 'contain',
-                     filter: 'brightness(0) sepia(1) hue-rotate(-12deg) saturate(1.4) brightness(0.72)' }}
+            style={{
+              width: 'auto', height: '52px', objectFit: 'contain',
+              filter: 'brightness(0) sepia(1) hue-rotate(-12deg) saturate(1.4) brightness(0.72)',
+            }}
           />
         </div>
 
-        <h1 className="font-serif font-light text-espresso text-2xl text-center mb-1">Admin</h1>
-        <p className="text-muted text-xs text-center mb-8">Moderate Glutton</p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="password" className="block text-xs font-medium text-muted uppercase tracking-widest mb-2">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoFocus
-              required
-              className="w-full px-4 py-3 rounded-lg border border-border bg-transparent text-espresso placeholder-muted focus:outline-none focus:border-tan transition-colors text-sm"
-              placeholder="Enter admin password"
-            />
-          </div>
-
-          {error && (
-            <p className="text-xs text-red-600 text-center">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-lg bg-terracotta text-white text-sm font-medium hover:bg-terracotta/90 transition-colors disabled:opacity-60"
-          >
-            {loading ? 'Signing in…' : 'Sign in'}
-          </button>
-        </form>
+        {/* Suspense required by Next.js 14 when using useSearchParams */}
+        <Suspense fallback={null}>
+          <AdminLoginForm />
+        </Suspense>
 
       </div>
     </div>
