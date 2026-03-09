@@ -151,8 +151,14 @@
   font-size: 1.1em;
 }
 
-.prose ul,
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.4em;
+}
+
 .prose ol {
+  list-style-type: decimal;
   padding-left: 1.5rem;
   margin-bottom: 1.4em;
 }
@@ -241,8 +247,15 @@
   border-left: 3px solid var(--color-lapis);
 }
 
-.prose-recipe ul,
+.prose-recipe ul {
+  list-style-type: disc;
+  font-size: 1rem;
+  line-height: 1.7;
+  padding-left: 1.25rem;
+}
+
 .prose-recipe ol {
+  list-style-type: decimal;
   font-size: 1rem;
   line-height: 1.7;
   padding-left: 1.25rem;
@@ -260,26 +273,70 @@
 
 /* ─── Print styles ──────────────────────────────────────────────── */
 @media print {
-  /* Hide navigation, footer, print button, and interactive elements */
-  header, footer, .no-print { display: none !important; }
+  /* Hide everything that isn't the recipe content */
+  nav, header, footer,
+  .no-print,
+  video, figure,
+  /* Hero image and photo gallery */
+  [style*="aspect-ratio"],
+  .photo-gallery,
+  /* Back link, section label, date/time */
+  a[href*="/recipes"],
+  a[href*="/spills"],
+  a[href*="/journal"] {
+    display: none !important;
+  }
 
-  body {
+  /* Also hide any div with aspect-ratio set inline (hero images) */
+  article > header ~ div[style],
+  article > div[style*="aspect"] {
+    display: none !important;
+  }
+
+  * {
     background: #fff !important;
     color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  body {
     font-size: 11pt;
     line-height: 1.6;
+    font-family: Georgia, serif;
   }
 
   article {
     max-width: 100% !important;
-    padding: 0 !important;
+    padding: 1cm 1.5cm !important;
     margin: 0 !important;
   }
 
-  .prose { color: #000; }
-  .prose h1, .prose h2, .prose h3 { page-break-after: avoid; }
-  .prose li { page-break-inside: avoid; }
-  .prose img { max-width: 220pt; }
+  /* Title and description */
+  article header { margin-bottom: 1.5em; }
+  article header h1 { font-size: 22pt; margin-bottom: 0.25em; }
+  article header p  { font-size: 11pt; color: #444 !important; }
+
+  /* Recipe sections — readable spacing */
+  .prose, .prose-recipe {
+    color: #000;
+    font-size: 10.5pt;
+    line-height: 1.65;
+    max-width: 100%;
+  }
+
+  .prose h2, .prose-recipe h2 { font-size: 14pt; margin-top: 1.5em; border-bottom: 1px solid #ccc; }
+  .prose h3, .prose-recipe h3 { font-size: 12pt; margin-top: 1.25em; border-left: none; padding-left: 0; }
+
+  .prose ol, .prose ul,
+  .prose-recipe ol, .prose-recipe ul {
+    padding-left: 1.5em;
+  }
+
+  .prose li, .prose-recipe li { margin-bottom: 0.3em; page-break-inside: avoid; }
+  h2, h3 { page-break-after: avoid; }
+
+  /* Hide images inside prose (inline article images) */
+  .prose img, .prose-recipe img { display: none !important; }
 
   /* Reveal animation — always show in print */
   .reveal-target {

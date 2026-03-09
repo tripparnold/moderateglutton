@@ -176,7 +176,7 @@ function FilterBar({ filters, onChange, showTop10 }: { filters: Filters; onChang
   function set<K extends keyof Filters>(key: K, val: Filters[K]) { onChange({ ...filters, [key]: val }); }
   const pill    = 'text-xs px-3 py-1.5 rounded-full border transition-colors font-medium';
   const pillOn  = `${pill} bg-espresso text-sand border-espresso`;
-  const pillOff = `${pill} border-border text-tan hover:border-tan`;
+  const pillOff = `${pill} border-espresso/25 text-tan hover:border-tan hover:text-espresso`;
 
   return (
     <div className="mb-6 space-y-3">
@@ -188,7 +188,7 @@ function FilterBar({ filters, onChange, showTop10 }: { filters: Filters; onChang
           </button>
         )}
         <button onClick={() => setOpen(!open)}
-          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors font-medium ${hasOtherFilters ? 'border-lapis text-lapis bg-lapis/5' : 'border-border text-muted hover:border-tan hover:text-tan'}`}>
+          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors font-medium ${hasOtherFilters ? 'border-lapis text-lapis bg-lapis/5' : 'border-espresso/25 text-muted hover:border-tan hover:text-tan'}`}>
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 3h14M4 8h8M7 13h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
           {open ? 'Hide filters' : 'More filters'}
           {hasOtherFilters && <span className="ml-0.5">· {[filters.neighborhood, filters.cuisine, filters.price, filters.awardedOnly ? 'Awarded' : ''].filter(Boolean).join(', ')}</span>}
@@ -199,7 +199,7 @@ function FilterBar({ filters, onChange, showTop10 }: { filters: Filters; onChang
       </div>
 
       {open && (
-        <div className="bg-linen border border-border rounded-2xl p-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="bg-linen border border-border rounded-2xl p-5 grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="text-xs uppercase tracking-widest text-muted mb-2 font-medium">Neighborhood</p>
             <select value={filters.neighborhood} onChange={(e) => set('neighborhood', e.target.value)}
@@ -248,8 +248,19 @@ export default function HoustonPage() {
     [selected]
   );
 
-  const toggleBtn = (active: boolean) =>
-    `px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${active ? 'bg-lapis text-sand border-lapis' : 'bg-transparent text-tan border-border hover:border-lapis hover:text-lapis'}`;
+  const viewBtn = (active: boolean) =>
+    `px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+      active
+        ? 'bg-lapis text-sand border-lapis'
+        : 'bg-transparent text-espresso border-espresso/25 hover:border-lapis hover:text-lapis'
+    }`;
+
+  const listBtn = (active: boolean) =>
+    `px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+      active
+        ? 'bg-lapis text-sand border-lapis'
+        : 'bg-transparent text-espresso border-espresso/25 hover:border-lapis hover:text-lapis'
+    }`;
 
   const spotCount = showWantToTry ? WANT_TO_TRY.length : RESTAURANTS.length;
 
@@ -260,24 +271,27 @@ export default function HoustonPage() {
         <p className="text-tan text-base">Where I eat.</p>
       </div>
 
-      {/* View + Want To Try toggles */}
+      {/* Row 1: Map / List view toggle */}
+      <div className="flex items-center gap-2 mb-3">
+        <button onClick={() => setView('map')}  className={viewBtn(view === 'map')}>Map</button>
+        <button onClick={() => setView('list')} className={viewBtn(view === 'list')}>List</button>
+      </div>
+
+      {/* Row 2: Content toggle + spot count */}
       <div className="flex items-center gap-2 mb-6 flex-wrap">
-        <button onClick={() => setView('map')}  className={toggleBtn(view === 'map')}>Map</button>
-        <button onClick={() => setView('list')} className={toggleBtn(view === 'list')}>List</button>
-        <div className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
         <button
           onClick={() => { setShowWantToTry(false); setSelected(null); setFilters(FILTER_DEFAULT); }}
-          className={toggleBtn(!showWantToTry)}
+          className={listBtn(!showWantToTry)}
         >
           Places I&apos;ve Been
         </button>
         <button
           onClick={() => { setShowWantToTry(true); setSelected(null); setFilters(FILTER_DEFAULT); }}
-          className={toggleBtn(showWantToTry)}
+          className={listBtn(showWantToTry)}
         >
-          Places on My List
+          On My List
         </button>
-        <span className="ml-2 text-xs text-muted">{spotCount} spots</span>
+        <span className="text-xs text-muted ml-1">{spotCount} spots</span>
       </div>
 
       {view === 'map' && (

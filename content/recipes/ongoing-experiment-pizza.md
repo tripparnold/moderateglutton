@@ -4,7 +4,7 @@ description: "Follow my running log as I attempt to master a New York–Neapolit
 date: "2025-05-05"
 author: "Tripp"
 tags: ["experiments", "pizza", "baking-steel", "cooking-experiments"]
-heroImage: "/media/posts/6/ChatGPT-Image-May-5-2025-01_54_21-PM-2.png"
+heroImage: "/media/posts/6/pizza_cooked2.jpeg"
 ---
 
 Gas-filled balls of dough own me.

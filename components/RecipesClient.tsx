@@ -11,13 +11,13 @@ export interface RecipePost {
   heroImage:   string;
   date:        string;
   tags:        string[];
-  cuisine?:    string;   // future tag-based field
-  effort?:     string;   // future tag-based field
-  diet?:       string[]; // future tag-based field
+  cuisine?:    string;
+  effort?:     string;
+  diet?:       string[];
 }
 
-const EFFORT_OPTIONS  = ['Quick', 'Weekend Project'] as const;
-const DIET_OPTIONS    = ['Vegetarian', 'Low-Carb', 'Gluten Free'] as const;
+const EFFORT_OPTIONS = ['Quick', 'Weekend Project'] as const;
+const DIET_OPTIONS   = ['Vegetarian', 'Low-Carb', 'Gluten Free'] as const;
 
 type EffortOption = typeof EFFORT_OPTIONS[number];
 type DietOption  = typeof DIET_OPTIONS[number];
@@ -27,7 +27,7 @@ interface Props {
   cuisines: string[];
 }
 
-function TagPill({ active, onClick, children }: {
+function Pill({ active, onClick, children }: {
   active:   boolean;
   onClick:  () => void;
   children: React.ReactNode;
@@ -37,8 +37,8 @@ function TagPill({ active, onClick, children }: {
       onClick={onClick}
       className={`px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${
         active
-          ? 'bg-terracotta text-white border-terracotta'
-          : 'bg-transparent text-tan border-border hover:border-tan hover:text-espresso'
+          ? 'bg-terracotta text-sand border-terracotta'
+          : 'border-tan/60 text-tan hover:border-tan hover:text-espresso'
       }`}
     >
       {children}
@@ -47,13 +47,17 @@ function TagPill({ active, onClick, children }: {
 }
 
 export default function RecipesClient({ posts, cuisines }: Props) {
-  const [cuisine,  setCuisine]  = useState('');
-  const [effort,   setEffort]   = useState<EffortOption | ''>('');
-  const [diet,     setDiet]     = useState<DietOption[]>([]);
+  const [open,    setOpen]    = useState(false);
+  const [cuisine, setCuisine] = useState('');
+  const [effort,  setEffort]  = useState<EffortOption | ''>('');
+  const [diet,    setDiet]    = useState<DietOption[]>([]);
 
   function toggleDiet(d: DietOption) {
     setDiet((prev) => prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]);
   }
+
+  const hasFilters = cuisine !== '' || effort !== '' || diet.length > 0;
+  function clearAll() { setCuisine(''); setEffort(''); setDiet([]); }
 
   const filtered = useMemo(() => {
     return posts.filter((p) => {
@@ -66,118 +70,112 @@ export default function RecipesClient({ posts, cuisines }: Props) {
     });
   }, [posts, cuisine, effort, diet]);
 
-  const hasFilters = cuisine !== '' || effort !== '' || diet.length > 0;
-
   return (
     <>
-      {/* ── Filter bar ──────────────────────────────────────────── */}
-      <div className="mb-10 space-y-4">
-
-        {/* Row 1: Cuisine dropdown */}
-        {cuisines.length > 0 && (
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-xs font-medium text-muted uppercase tracking-widest w-24 flex-shrink-0">Cuisine</span>
-            <select
-              value={cuisine}
-              onChange={(e) => setCuisine(e.target.value)}
-              className="text-sm text-espresso bg-transparent border border-border rounded px-3 py-1.5 focus:outline-none focus:border-tan transition-colors"
-            >
-              <option value="">All</option>
-              {cuisines.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-        )}
-
-        {/* Row 2: Effort */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-xs font-medium text-muted uppercase tracking-widest w-24 flex-shrink-0">Effort</span>
-          <div className="flex gap-2 flex-wrap">
-            {EFFORT_OPTIONS.map((e) => (
-              <TagPill key={e} active={effort === e} onClick={() => setEffort(effort === e ? '' : e)}>
-                {e}
-              </TagPill>
-            ))}
-          </div>
-        </div>
-
-        {/* Row 3: Diet */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-xs font-medium text-muted uppercase tracking-widest w-24 flex-shrink-0">Diet</span>
-          <div className="flex gap-2 flex-wrap">
-            {DIET_OPTIONS.map((d) => (
-              <TagPill key={d} active={diet.includes(d)} onClick={() => toggleDiet(d)}>
-                {d}
-              </TagPill>
-            ))}
-          </div>
-        </div>
-
-        {/* Clear */}
-        {hasFilters && (
+      {/* Filter bar */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3">
           <button
-            onClick={() => { setCuisine(''); setEffort(''); setDiet([]); }}
-            className="text-xs text-muted hover:text-terracotta transition-colors underline-offset-2 underline"
+            onClick={() => setOpen(!open)}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium border transition-colors ${
+              hasFilters
+                ? 'bg-terracotta/10 border-terracotta text-terracotta'
+                : 'border-tan/60 text-tan hover:border-tan hover:text-espresso'
+            }`}
           >
-            Clear filters
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M1 3h14M4 8h8M7 13h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+            </svg>
+            Filters
+            {hasFilters && (
+              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-terracotta text-sand text-[10px] font-bold">
+                {[cuisine, effort, ...diet].filter(Boolean).length}
+              </span>
+            )}
           </button>
+          {hasFilters && (
+            <button onClick={clearAll} className="text-xs text-muted hover:text-terracotta transition-colors">
+              Clear all
+            </button>
+          )}
+        </div>
+
+        {open && (
+          <div className="mt-3 p-4 bg-linen border border-border rounded-2xl space-y-4">
+            {cuisines.length > 0 && (
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">Cuisine</p>
+                <select
+                  value={cuisine}
+                  onChange={(e) => setCuisine(e.target.value)}
+                  className="text-xs text-espresso bg-sand border border-border rounded-lg px-3 py-1.5 focus:outline-none focus:border-tan"
+                >
+                  <option value="">All</option>
+                  {cuisines.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            )}
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">Effort</p>
+              <div className="flex gap-2 flex-wrap">
+                {EFFORT_OPTIONS.map((e) => (
+                  <Pill key={e} active={effort === e} onClick={() => setEffort(effort === e ? '' : e)}>{e}</Pill>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-2">Diet</p>
+              <div className="flex gap-2 flex-wrap">
+                {DIET_OPTIONS.map((d) => (
+                  <Pill key={d} active={diet.includes(d)} onClick={() => toggleDiet(d)}>{d}</Pill>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* ── Note about filters ───────────────────────────────────── */}
       {hasFilters && filtered.length === 0 && (
-        <p className="text-muted text-sm">No recipes match those filters — check back soon.</p>
+        <p className="text-muted text-sm mb-8">No recipes match those filters.</p>
       )}
 
-      {/* ── Recipe grid ─────────────────────────────────────────── */}
       {filtered.length > 0 && (
         <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((post) => {
-            const formattedDate = post.date
-              ? new Date(post.date).toLocaleDateString('en-US', {
-                  year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC',
-                })
-              : '';
-
-            return (
-              <li key={post.slug}>
-                <Link
-                  href={`/recipes/${post.slug}`}
-                  className="group block rounded-xl overflow-hidden border border-border hover:border-tan transition-colors"
-                >
-                  {post.heroImage ? (
-                    <div className="relative w-full aspect-[4/3] overflow-hidden bg-linen">
-                      <Image
-                        src={post.heroImage}
-                        alt={post.title}
-                        fill
-                        sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw"
-                        className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-full aspect-[4/3] bg-linen flex items-center justify-center">
-                      <span className="text-muted text-3xl">🥘</span>
-                    </div>
-                  )}
-                  <div className="p-4">
-                    {formattedDate && (
-                      <time className="text-xs text-muted">{formattedDate}</time>
-                    )}
-                    <h2 className="font-serif font-medium text-espresso text-lg mt-1 leading-snug group-hover:text-terracotta transition-colors">
-                      {post.title}
-                    </h2>
-                    {post.description && (
-                      <p className="text-sm text-muted mt-1.5 line-clamp-2">{post.description}</p>
-                    )}
+          {filtered.map((post) => (
+            <li key={post.slug}>
+              <Link
+                href={`/recipes/${post.slug}`}
+                className="group block rounded-xl overflow-hidden border border-border hover:border-tan transition-colors"
+              >
+                {post.heroImage ? (
+                  <div className="relative w-full aspect-[4/3] overflow-hidden bg-linen">
+                    <Image
+                      src={post.heroImage}
+                      alt={post.title}
+                      fill
+                      sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw"
+                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                    />
                   </div>
-                </Link>
-              </li>
-            );
-          })}
+                ) : (
+                  <div className="w-full aspect-[4/3] bg-linen flex items-center justify-center">
+                    <span className="text-muted text-3xl">🥘</span>
+                  </div>
+                )}
+                <div className="p-4">
+                  <h2 className="font-serif font-medium text-espresso text-lg leading-snug group-hover:text-terracotta transition-colors">
+                    {post.title}
+                  </h2>
+                  {post.description && (
+                    <p className="text-sm text-muted mt-1.5 line-clamp-2">{post.description}</p>
+                  )}
+                </div>
+              </Link>
+            </li>
+          ))}
         </ul>
       )}
 
-      {/* ── Empty state (no filters applied) ────────────────────── */}
       {!hasFilters && filtered.length === 0 && (
         <p className="text-muted">Nothing here yet — check back soon.</p>
       )}
