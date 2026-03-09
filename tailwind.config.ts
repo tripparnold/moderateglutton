@@ -8,18 +8,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // All colors are driven by CSS custom properties.
-        // This lets a single '.dark' class on <html> flip the entire palette.
-        sand:       'var(--color-sand)',
-        linen:      'var(--color-linen)',
-        espresso:   'var(--color-espresso)',
-        terracotta: 'var(--color-terracotta)',
-        clay:       'var(--color-clay)',
-        amber:      'var(--color-amber)',
-        tan:        'var(--color-tan)',
-        muted:      'var(--color-muted)',
-        border:     'var(--color-border)',
-        lapis:      'var(--color-lapis)',
+        // RGB channel pattern: allows Tailwind opacity modifiers like bg-lapis/20, border-espresso/30.
+        // Each color has both a solid fallback (var(--color-x)) and an rgb() channel version.
+        sand:       'rgb(var(--color-sand-rgb) / <alpha-value>)',
+        linen:      'rgb(var(--color-linen-rgb) / <alpha-value>)',
+        espresso:   'rgb(var(--color-espresso-rgb) / <alpha-value>)',
+        terracotta: 'rgb(var(--color-terracotta-rgb) / <alpha-value>)',
+        clay:       'rgb(var(--color-clay-rgb) / <alpha-value>)',
+        amber:      'rgb(var(--color-amber-rgb) / <alpha-value>)',
+        tan:        'rgb(var(--color-tan-rgb) / <alpha-value>)',
+        muted:      'rgb(var(--color-muted-rgb) / <alpha-value>)',
+        border:     'rgb(var(--color-border-rgb) / <alpha-value>)',
+        lapis:      'rgb(var(--color-lapis-rgb) / <alpha-value>)',
       },
       fontFamily: {
         serif: ['var(--font-cormorant)', 'Georgia', 'serif'],

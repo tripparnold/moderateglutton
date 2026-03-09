@@ -14,6 +14,18 @@
   --color-muted:      #9A8A78;
   --color-border:     #E2D8CC;
   --color-lapis:      #2E5E8E;
+
+  /* RGB channels — enables Tailwind opacity modifiers (bg-lapis/20, border-espresso/30, etc.) */
+  --color-sand-rgb:       237 232 223;
+  --color-linen-rgb:      229 222 211;
+  --color-espresso-rgb:   44 24 16;
+  --color-terracotta-rgb: 168 80 42;
+  --color-clay-rgb:       139 63 32;
+  --color-amber-rgb:      196 132 58;
+  --color-tan-rgb:        122 98 72;
+  --color-muted-rgb:      154 138 120;
+  --color-border-rgb:     226 216 204;
+  --color-lapis-rgb:      46 94 142;
 }
 
 /* ─── Color tokens — Dark desert ────────────────────────────────── */
@@ -28,6 +40,18 @@
   --color-muted:      #8A7A6A;
   --color-border:     #3A2A1E;
   --color-lapis:      #5A90C8;
+
+  /* RGB channels — dark mode */
+  --color-sand-rgb:       25 17 10;
+  --color-linen-rgb:      35 24 16;
+  --color-espresso-rgb:   237 232 223;
+  --color-terracotta-rgb: 212 104 58;
+  --color-clay-rgb:       224 122 74;
+  --color-amber-rgb:      212 152 74;
+  --color-tan-rgb:        192 168 130;
+  --color-muted-rgb:      138 122 106;
+  --color-border-rgb:     58 42 30;
+  --color-lapis-rgb:      90 144 200;
 }
 
 /* ─── Base ─────────────────────────────────────────────────────── */

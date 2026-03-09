@@ -38,7 +38,7 @@ function Pill({ active, onClick, children }: {
       className={`px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${
         active
           ? 'bg-terracotta text-sand border-terracotta'
-          : 'border-tan/60 text-tan hover:border-tan hover:text-espresso'
+          : 'border-tan/50 text-tan hover:border-tan hover:text-espresso'
       }`}
     >
       {children}
@@ -80,7 +80,7 @@ export default function RecipesClient({ posts, cuisines }: Props) {
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium border transition-colors ${
               hasFilters
                 ? 'bg-terracotta/10 border-terracotta text-terracotta'
-                : 'border-tan/60 text-tan hover:border-tan hover:text-espresso'
+                : 'border-tan/50 text-tan hover:border-tan hover:text-espresso'
             }`}
           >
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
