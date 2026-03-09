@@ -4,10 +4,11 @@ import { useEffect, useRef } from 'react';
 import type { Restaurant }   from '@/data/restaurants';
 
 interface Props {
-  locations: Restaurant[];
-  selected:  string | null;
-  onSelect:  (id: string) => void;
-  isDark?:   boolean;
+  locations:    Restaurant[];
+  selected:     string | null;
+  onSelect:     (id: string) => void;
+  isDark?:      boolean;
+  isWantToTry?: boolean;
 }
 
 declare global { interface Window { L: any } }
@@ -61,17 +62,21 @@ function renderDistinctions(d: Restaurant['distinctions']): string {
 
 function buildPopupHtml(loc: Restaurant): string {
   const distinctions = renderDistinctions(loc.distinctions);
+  const websiteLink = loc.website
+    ? `<a href="${loc.website}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:6px;font-size:11px;color:#2E5E8E;font-weight:600;text-decoration:none;">Visit Website ↗</a>`
+    : '';
   return `
     <div style="font-family:system-ui,sans-serif;min-width:200px;padding:4px 2px;">
       <p style="margin:0 0 2px;font-size:14px;font-weight:700;color:#2C1810;">${loc.name}</p>
-      <p style="margin:0 0 2px;font-size:11px;color:#A8502A;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">${loc.cuisine}</p>
+      <p style="margin:0 0 2px;font-size:11px;color:#2E5E8E;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">${loc.cuisine}</p>
       <p style="margin:0 0 6px;font-size:11px;color:#9A8A78;">${loc.neighborhood} · ${loc.price}</p>
-      <p style="margin:0 0 8px;font-size:11px;color:#9A8A78;">${loc.address}</p>
+      <p style="margin:0 0 4px;font-size:11px;color:#9A8A78;">${loc.address}</p>
+      ${websiteLink}
       ${distinctions}
     </div>`;
 }
 
-export default function HoustonMap({ locations, selected, onSelect, isDark = false }: Props) {
+export default function HoustonMap({ locations, selected, onSelect, isDark = false, isWantToTry = false }: Props) {
   const containerRef   = useRef<HTMLDivElement>(null);
   const mapRef         = useRef<any>(null);
   const tileRef        = useRef<any>(null);
@@ -97,9 +102,10 @@ export default function HoustonMap({ locations, selected, onSelect, isDark = fal
         attribution: ATTRIBUTION, maxZoom: 19, subdomains: 'abcd',
       }).addTo(map);
 
+      const pinColor = isWantToTry ? '#6B8FAB' : '#2E5E8E'; // lighter lapis for want-to-try
       locations.forEach((loc) => {
         const iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36">
-          <path d="M14 0C6.268 0 0 6.268 0 14c0 9.94 14 22 14 22S28 23.94 28 14C28 6.268 21.732 0 14 0z" fill="#A8502A" stroke="#fff" stroke-width="1.5"/>
+          <path d="M14 0C6.268 0 0 6.268 0 14c0 9.94 14 22 14 22S28 23.94 28 14C28 6.268 21.732 0 14 0z" fill="${pinColor}" stroke="#fff" stroke-width="1.5"/>
           <circle cx="14" cy="14" r="5" fill="#fff"/>
         </svg>`;
         const icon   = L.divIcon({ html: iconHtml, className: '', iconSize: [28,36], iconAnchor: [14,36], popupAnchor: [0,-38] });

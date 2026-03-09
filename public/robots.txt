@@ -1,3 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Keep about pages out of search results while unpublished
+Disallow: /about
+Disallow: /spills/about
+Disallow: /journal/about
+Disallow: /admin
+
 Sitemap: https://moderateglutton.com/sitemap.xml

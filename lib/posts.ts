@@ -22,5 +22,6 @@ export function getAllPosts(section: string) {
   const slugs = getPostSlugs(section);
   return slugs
     .map((slug) => getPostBySlug(section, slug))
+    .filter((p) => !p.frontmatter.draft)         // exclude drafts
     .sort((a, b) => (a.frontmatter.date > b.frontmatter.date ? -1 : 1));
 }

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { ALL_ORDERED, RESTAURANTS } from '@/data/restaurants';
+import { ALL_ORDERED, WANT_TO_TRY, RESTAURANTS } from '@/data/restaurants';
 import type { Restaurant, PriceTier } from '@/data/restaurants';
 
 const HoustonMap = dynamic(() => import('@/components/HoustonMap'), { ssr: false });
@@ -83,11 +83,27 @@ function applyFilters(locs: Restaurant[], f: Filters): Restaurant[] {
   });
 }
 
-const ALL_NEIGHBORHOODS = Array.from(new Set(RESTAURANTS.map(r => r.neighborhood))).sort();
+// Use consolidated neighborhoods from ALL sources
+const ALL_NEIGHBORHOODS = Array.from(new Set([...ALL_ORDERED, ...WANT_TO_TRY].map(r => r.neighborhood))).sort();
 const ALL_CUISINES      = Array.from(new Set(RESTAURANTS.flatMap(r => r.cuisineTags))).sort();
 const PRICE_TIERS: PriceTier[] = ['$', '$$', '$$$', '$$$$'];
 
-function RestaurantCard({ restaurant, onSelect }: { restaurant: Restaurant; onSelect: (id: string) => void }) {
+function WebsiteLink({ url, label = 'Website' }: { url?: string; label?: string }) {
+  if (!url) return null;
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      className="text-xs text-lapis hover:underline font-medium"
+    >
+      {label} ↗
+    </a>
+  );
+}
+
+function RestaurantCard({ restaurant, onSelect, isWantToTry }: { restaurant: Restaurant; onSelect: (id: string) => void; isWantToTry?: boolean }) {
   const r = restaurant;
   return (
     <button onClick={() => onSelect(r.id)} className="group w-full h-full text-left rounded-2xl border border-border bg-linen hover:border-lapis/50 hover:shadow-md transition-all overflow-hidden flex flex-col">
@@ -95,6 +111,7 @@ function RestaurantCard({ restaurant, onSelect }: { restaurant: Restaurant; onSe
         <div className="flex items-start justify-between gap-2 mb-2">
           <span className="text-xs font-semibold uppercase tracking-widest text-lapis">{r.cuisine}</span>
           {r.topRank !== undefined && <span className="text-xs font-bold text-terracotta tabular-nums">#{r.topRank}</span>}
+          {isWantToTry && <span className="text-[10px] font-semibold uppercase tracking-wider text-muted border border-border rounded-full px-2 py-0.5">On My List</span>}
         </div>
         <h2 className="font-serif text-xl text-espresso leading-tight group-hover:text-terracotta transition-colors">{r.name}</h2>
         <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -104,6 +121,11 @@ function RestaurantCard({ restaurant, onSelect }: { restaurant: Restaurant; onSe
         </div>
         <p className="text-xs text-muted mt-0.5">{r.address}</p>
         <MapsLinks address={r.address} />
+        {r.website && (
+          <div className="mt-1">
+            <WebsiteLink url={r.website} />
+          </div>
+        )}
         <DistinctionBadges d={r.distinctions} />
       </div>
       <div className="px-5 pb-4 pt-0">
@@ -113,10 +135,13 @@ function RestaurantCard({ restaurant, onSelect }: { restaurant: Restaurant; onSe
   );
 }
 
-function SidebarDetail({ restaurant, onClose }: { restaurant: Restaurant; onClose: () => void }) {
+function SidebarDetail({ restaurant, onClose, isWantToTry }: { restaurant: Restaurant; onClose: () => void; isWantToTry?: boolean }) {
   const r = restaurant;
   return (
     <div className="bg-linen rounded-2xl border border-border p-5">
+      {isWantToTry && (
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted border border-border rounded-full px-2 py-0.5 inline-block mb-2">On My List</p>
+      )}
       <p className="text-xs uppercase tracking-widest text-lapis font-medium mb-2">{r.cuisine}</p>
       <div className="flex items-center justify-between gap-2 mb-1">
         <h2 className="font-serif text-2xl text-espresso leading-tight">{r.name}</h2>
@@ -129,13 +154,18 @@ function SidebarDetail({ restaurant, onClose }: { restaurant: Restaurant; onClos
       </div>
       <p className="text-xs text-muted">{r.address}</p>
       <MapsLinks address={r.address} />
+      {r.website && (
+        <div className="mt-2">
+          <WebsiteLink url={r.website} label="Visit Website" />
+        </div>
+      )}
       <DistinctionBadges d={r.distinctions} />
       <button onClick={onClose} className="mt-4 text-xs text-muted hover:text-lapis transition-colors">← Back to all</button>
     </div>
   );
 }
 
-function FilterBar({ filters, onChange }: { filters: Filters; onChange: (f: Filters) => void }) {
+function FilterBar({ filters, onChange, showTop10 }: { filters: Filters; onChange: (f: Filters) => void; showTop10: boolean }) {
   const [open, setOpen] = useState(false);
   const hasOtherFilters = !!(filters.neighborhood || filters.cuisine || filters.price || filters.awardedOnly);
   function set<K extends keyof Filters>(key: K, val: Filters[K]) { onChange({ ...filters, [key]: val }); }
@@ -146,10 +176,12 @@ function FilterBar({ filters, onChange }: { filters: Filters; onChange: (f: Filt
   return (
     <div className="mb-6 space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-        <button onClick={() => set('top10Only', !filters.top10Only)}
-          className={`${pill} ${filters.top10Only ? 'bg-terracotta text-white border-terracotta' : 'border-border text-tan hover:border-terracotta hover:text-terracotta'}`}>
-          Tripp&apos;s Top 10
-        </button>
+        {showTop10 && (
+          <button onClick={() => set('top10Only', !filters.top10Only)}
+            className={`${pill} ${filters.top10Only ? 'bg-lapis text-sand border-lapis' : 'border-border text-tan hover:border-lapis hover:text-lapis'}`}>
+            Tripp&apos;s Top 10
+          </button>
+        )}
         <button onClick={() => setOpen(!open)}
           className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors font-medium ${hasOtherFilters ? 'border-lapis text-lapis bg-lapis/5' : 'border-border text-muted hover:border-tan hover:text-tan'}`}>
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 3h14M4 8h8M7 13h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
@@ -197,15 +229,24 @@ function FilterBar({ filters, onChange }: { filters: Filters; onChange: (f: Filt
 }
 
 export default function HoustonPage() {
-  const [view,     setView]     = useState<'map' | 'list'>('map');
-  const [selected, setSelected] = useState<string | null>(null);
-  const [filters,  setFilters]  = useState<Filters>(FILTER_DEFAULT);
+  const [view,         setView]         = useState<'map' | 'list'>('map');
+  const [showWantToTry, setShowWantToTry] = useState(false);
+  const [selected,     setSelected]     = useState<string | null>(null);
+  const [filters,      setFilters]      = useState<Filters>(FILTER_DEFAULT);
 
-  const selectedRestaurant = RESTAURANTS.find(r => r.id === selected);
-  const filteredAll        = useMemo(() => applyFilters(ALL_ORDERED, filters), [filters]);
-  const mapLocations       = useMemo(() => applyFilters(ALL_ORDERED, filters), [filters]);
+  const activeList     = showWantToTry ? WANT_TO_TRY : ALL_ORDERED;
+  const filteredAll    = useMemo(() => applyFilters(activeList, filters), [activeList, filters]);
+  const mapLocations   = useMemo(() => applyFilters(activeList, filters), [activeList, filters]);
 
-  const toggleBtn = (active: boolean) => `px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${active ? 'bg-lapis text-sand border-lapis' : 'bg-transparent text-tan border-border hover:border-lapis hover:text-lapis'}`;
+  const selectedRestaurant = useMemo(
+    () => [...ALL_ORDERED, ...WANT_TO_TRY].find(r => r.id === selected),
+    [selected]
+  );
+
+  const toggleBtn = (active: boolean) =>
+    `px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${active ? 'bg-lapis text-sand border-lapis' : 'bg-transparent text-tan border-border hover:border-lapis hover:text-lapis'}`;
+
+  const spotCount = showWantToTry ? WANT_TO_TRY.length : RESTAURANTS.length;
 
   return (
     <main className="max-w-6xl mx-auto px-5 py-10 sm:py-14">
@@ -214,22 +255,36 @@ export default function HoustonPage() {
         <p className="text-tan text-base">Where I eat.</p>
       </div>
 
+      {/* View + Want To Try toggles */}
       <div className="flex items-center gap-2 mb-6 flex-wrap">
         <button onClick={() => setView('map')}  className={toggleBtn(view === 'map')}>Map</button>
         <button onClick={() => setView('list')} className={toggleBtn(view === 'list')}>List</button>
-        <span className="ml-2 text-xs text-muted">{RESTAURANTS.length} spots</span>
+        <div className="mx-1 h-5 w-px bg-border" aria-hidden="true" />
+        <button
+          onClick={() => { setShowWantToTry(false); setSelected(null); setFilters(FILTER_DEFAULT); }}
+          className={toggleBtn(!showWantToTry)}
+        >
+          Places I&apos;ve Been
+        </button>
+        <button
+          onClick={() => { setShowWantToTry(true); setSelected(null); setFilters(FILTER_DEFAULT); }}
+          className={toggleBtn(showWantToTry)}
+        >
+          Places on My List
+        </button>
+        <span className="ml-2 text-xs text-muted">{spotCount} spots</span>
       </div>
 
       {view === 'map' && (
         <>
-          <FilterBar filters={filters} onChange={setFilters} />
+          <FilterBar filters={filters} onChange={setFilters} showTop10={!showWantToTry} />
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:flex-1 rounded-2xl overflow-hidden border border-border shadow-sm" style={{ height: 540 }}>
-              <HoustonMap locations={mapLocations} selected={selected} onSelect={setSelected} />
+              <HoustonMap locations={mapLocations} selected={selected} onSelect={setSelected} isWantToTry={showWantToTry} />
             </div>
             <div className="lg:w-72">
               {selectedRestaurant ? (
-                <SidebarDetail restaurant={selectedRestaurant} onClose={() => setSelected(null)} />
+                <SidebarDetail restaurant={selectedRestaurant} onClose={() => setSelected(null)} isWantToTry={showWantToTry} />
               ) : (
                 <div>
                   <p className="text-xs uppercase tracking-widest text-muted mb-3 px-1">{mapLocations.length} spots · click a pin to explore</p>
@@ -260,18 +315,18 @@ export default function HoustonPage() {
 
       {view === 'list' && (
         <>
-          <FilterBar filters={filters} onChange={setFilters} />
+          <FilterBar filters={filters} onChange={setFilters} showTop10={!showWantToTry} />
           {filters.top10Only && (
             <p className="text-sm text-muted -mt-2 mb-5 max-w-xl">Not a definitive ranking — just where I&apos;d send you right now.</p>
           )}
-          <p className="text-xs text-muted mb-5">{filteredAll.length} of {RESTAURANTS.length} spots</p>
+          <p className="text-xs text-muted mb-5">{filteredAll.length} of {spotCount} spots</p>
           {filteredAll.length === 0 ? (
             <p className="text-muted text-sm py-10 text-center">No spots match these filters.</p>
           ) : (
             <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {filteredAll.map(r => (
                 <li key={r.id} className="flex">
-                  <RestaurantCard restaurant={r} onSelect={id => { setSelected(id); setView('map'); }} />
+                  <RestaurantCard restaurant={r} onSelect={id => { setSelected(id); setView('map'); }} isWantToTry={showWantToTry} />
                 </li>
               ))}
             </ul>

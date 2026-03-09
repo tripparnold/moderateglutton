@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs   from 'fs';
 import path from 'path';
 import { getAllPosts } from '@/lib/posts';
+import { ALL_ORDERED, WANT_TO_TRY } from '@/data/restaurants';
 
 // Auto-discover all sections that exist in the content directory
 function getContentSections(): string[] {
@@ -64,6 +65,38 @@ function scorePost(
   return s;
 }
 
+function scoreRestaurant(
+  r: { name: string; cuisine: string; cuisineTags: string[]; neighborhood: string; address: string },
+  q: string
+): number {
+  const query = q.toLowerCase();
+  const words = query.split(/\s+/).filter(Boolean);
+
+  const name         = r.name.toLowerCase();
+  const cuisine      = r.cuisine.toLowerCase();
+  const cuisineTags  = r.cuisineTags.join(' ').toLowerCase();
+  const neighborhood = r.neighborhood.toLowerCase();
+
+  let s = 0;
+
+  // Exact phrase
+  if (name.includes(query))         s += 200;
+  if (cuisine.includes(query))      s += 60;
+  if (cuisineTags.includes(query))  s += 40;
+  if (neighborhood.includes(query)) s += 30;
+
+  // Individual words
+  for (const w of words) {
+    if (w.length < 2) continue;
+    if (name.includes(w))         s += 100;
+    if (cuisine.includes(w))      s += 50;
+    if (cuisineTags.includes(w))  s += 30;
+    if (neighborhood.includes(w)) s += 20;
+  }
+
+  return s;
+}
+
 export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams.get('q')?.trim() ?? '';
 
@@ -73,12 +106,15 @@ export async function GET(req: NextRequest) {
   const sections = getContentSections();
   const results: SearchResult[] = [];
 
+  // ── Content posts ────────────────────────────────────────────────
   for (const section of sections) {
     try {
       const posts = getAllPosts(section);
       for (const post of posts) {
+        // Skip drafts/noindex posts
+        if (post.frontmatter.draft || post.frontmatter.noindex) continue;
         const s = scorePost(post, section, q);
-        // Require a meaningful match (title/description level, not just stray content words)
+        // Require a meaningful match
         if (s >= 20) {
           results.push({
             slug:        post.slug,
@@ -95,9 +131,25 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // Sort by score descending, return top 10
+  // ── Restaurants ──────────────────────────────────────────────────
+  const allRestaurants = [...ALL_ORDERED, ...WANT_TO_TRY];
+  for (const restaurant of allRestaurants) {
+    const s = scoreRestaurant(restaurant, q);
+    if (s >= 20) {
+      results.push({
+        slug:        `houston#${restaurant.id}`,
+        section:     'houston',
+        title:       restaurant.name,
+        description: `${restaurant.cuisine} · ${restaurant.neighborhood} · ${restaurant.price}`,
+        heroImage:   '',
+        score:       s,
+      });
+    }
+  }
+
+  // Sort by score descending, return top 12
   results.sort((a, b) => b.score - a.score);
-  const top = results.slice(0, 10).map(({ score: _s, ...rest }) => rest);
+  const top = results.slice(0, 12).map(({ score: _s, ...rest }) => rest);
 
   return NextResponse.json(top);
 }

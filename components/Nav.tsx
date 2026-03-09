@@ -255,10 +255,13 @@ export default function Nav() {
               />
               <button
                 onClick={() => setSearchOpen(false)}
-                className="text-xs text-muted border border-border rounded px-1.5 py-0.5 hover:text-espresso transition-colors"
+                className="text-muted hover:text-espresso transition-colors p-1"
                 aria-label="Close search"
               >
-                esc
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <line x1="1" y1="1" x2="13" y2="13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                  <line x1="13" y1="1" x2="1" y2="13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                </svg>
               </button>
             </div>
 
@@ -267,7 +270,7 @@ export default function Nav() {
                 {results.map((r: any) => (
                   <li key={`${r.section}/${r.slug}`}>
                     <Link
-                      href={`/${r.section}/${r.slug}`}
+                      href={r.section === 'houston' ? `/houston` : `/${r.section}/${r.slug}`}
                       className="flex gap-4 items-start px-5 py-3.5 hover:bg-linen transition-colors"
                       onClick={() => setSearchOpen(false)}
                     >
@@ -282,9 +285,7 @@ export default function Nav() {
               </ul>
             ) : query.length > 1 ? (
               <p className="px-5 py-8 text-sm text-muted text-center">No results for &ldquo;{query}&rdquo;</p>
-            ) : (
-              <p className="px-5 py-6 text-xs text-muted text-center">Type to search — or press ⌘K anytime</p>
-            )}
+            ) : null}
           </div>
         </div>
       )}

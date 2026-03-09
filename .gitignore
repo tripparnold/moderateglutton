@@ -19,3 +19,9 @@ node_modules/
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large media files — host externally, don't commit to git
+*.mp4
+*.mov
+*.avi
+*.webm

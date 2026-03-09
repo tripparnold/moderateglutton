@@ -4,9 +4,10 @@ import Image from 'next/image';
 import { remark }     from 'remark';
 import remarkHtml     from 'remark-html';
 import { getPostBySlug, getPostSlugs } from '@/lib/posts';
-import RecipeContent from '@/components/RecipeContent';
+import RecipeContent  from '@/components/RecipeContent';
+import PhotoGallery   from '@/components/PhotoGallery';
 
-const VALID_SECTIONS = ['journal', 'travel', 'houston', 'recipes'];
+const VALID_SECTIONS = ['journal', 'travel', 'houston', 'recipes', 'spills'];
 
 interface Props {
   params: { section: string; slug: string };
@@ -58,10 +59,11 @@ export default async function PostPage({ params }: Props) {
   const htmlContent = await markdownToHtml(content);
   const isRecipe    = params.section === 'recipes';
 
-  const title:       string = frontmatter.title       as string;
-  const description: string = (frontmatter.description as string) ?? '';
-  const heroImage:   string = (frontmatter.heroImage  as string)  ?? '';
-  const date:        string = (frontmatter.date        as string)  ?? '';
+  const title:         string   = frontmatter.title         as string;
+  const description:   string   = (frontmatter.description  as string)   ?? '';
+  const heroImage:     string   = (frontmatter.heroImage    as string)    ?? '';
+  const galleryImages: string[] = (frontmatter.galleryImages as string[]) ?? [];
+  const date:          string   = (frontmatter.date          as string)   ?? '';
 
   const formattedDate = date
     ? new Date(date).toLocaleDateString('en-US', {
@@ -111,8 +113,10 @@ export default async function PostPage({ params }: Props) {
         )}
       </header>
 
-      {/* Hero image — square crop, half-width so article is immediately accessible */}
-      {heroImage && (
+      {/* Hero — gallery takes priority over single hero image */}
+      {galleryImages.length > 0 ? (
+        <PhotoGallery images={galleryImages} alt={title} />
+      ) : heroImage ? (
         <div
           className="relative mb-10 overflow-hidden rounded-xl mx-auto"
           style={{ aspectRatio: '1/1', width: 'min(340px, 100%)' }}
@@ -126,7 +130,7 @@ export default async function PostPage({ params }: Props) {
             priority
           />
         </div>
-      )}
+      ) : null}
 
       {/* Body — RecipeContent for recipes (scroll-reveal + snap), plain prose otherwise */}
       {isRecipe ? (

@@ -1,8 +1,8 @@
 import PhotoScroll from '@/components/PhotoScroll';
 import { getAllPosts } from '@/lib/posts';
 
-// 'spills' excluded from home feed — journal and travel retired
-const SECTIONS = ['recipes'] as const;
+// Both recipes and spills appear on the home feed scroll
+const SECTIONS = ['recipes', 'spills'] as const;
 
 function getScrollPosts() {
   const all = SECTIONS.flatMap((section) =>

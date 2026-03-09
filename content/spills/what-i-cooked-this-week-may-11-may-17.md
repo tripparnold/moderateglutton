@@ -41,7 +41,7 @@ Miso-marinated salmon is great—just rinse before pan-searing. Or better yet, s
 
 ### May 13, 2025
 
-##### [Ongoing Experiment: Pizza](/ongoing-experiment-pizza)
+##### [Ongoing Experiment: Pizza](/recipes/ongoing-experiment-pizza)
 
 This week's felt like a minor step back. So elusive, pizza.
 

@@ -3,6 +3,8 @@ title: "About"
 description: "Learn more about Tripp Arnold, the mind and stomach behind Moderate Glutton — cooking, traveling, and eating his way through Texas and beyond."
 date: "2025-04-30"
 author: "Tripp"
+draft: true
+noindex: true
 ---
 
 **About Moderate Glutton**
