@@ -1,9 +1,10 @@
 ---
 title: "Miso-Glazed Salmon"
-description: "A simple miso glaze that works on salmon, black cod, or anything else worth glazing. Broil it fast and don't overthink it."
+description: "Broiled miso-marinated salmon or whatever fish you've got."
 date: "2026-03-01"
 author: "Tripp"
 tags: ["recipes", "seafood", "salmon", "miso", "weeknight", "japanese"]
+heroImage: "/media/posts/holdingcellforphotos/miso-salmon1.jpeg"
 galleryImages:
   - "/media/posts/holdingcellforphotos/miso-salmon1.jpeg"
   - "/media/posts/holdingcellforphotos/miso-salmon2jpeg.jpeg"
@@ -11,45 +12,51 @@ galleryImages:
   - "/media/posts/holdingcellforphotos/miso-salmon5.jpeg"
 ---
 
-This is the kind of recipe you make once and then never look up again. The glaze is four ingredients and the fish cooks in under ten minutes. It also works beautifully on black cod if you want to be fancy about it — black cod holds the marinade longer and comes out even silkier.
-
-The miso and mirin do most of the work here. Don't skip the marinating time if you can help it — even an hour makes a difference, and overnight is genuinely great.
+The marinade does heavy lifting here. It pulls the fishiness back and loads in umami. An hour is enough; overnight is better if you plan ahead. Under the broiler it goes dark and lacquered fast, so you have to pay attention, but that's really the only part that requires you. Have an instant read thermometer on hand. We eat with medium grain rice, veggies, and sliced avocado.
 
 ### **Ingredients**
 
-**For the glaze:**
-- 3 tbsp white miso paste
-- 2 tbsp mirin
-- 1 tbsp sake (or dry white wine in a pinch)
-- 1 tbsp sugar
+**Marinade:**
+- 3 tbsp shiro or red miso
+- 3 tbsp mirin
+- 3 tbsp sake
+- 1 tbsp white sugar
+- 1 tbsp soy sauce
+- White pepper, to taste
 
-**For the fish:**
-- 4 salmon fillets (about 6 oz each), skin on or off
-- Neutral oil, for the pan
-- Sesame seeds and sliced scallions, to finish
+**Optional glaze (if serving as a sauce):**
+- 1 tbsp soy sauce
+- 1 tbsp water
+- 2 tsp cornstarch
 
-**To serve:**
-- Steamed medium-grain rice
-- Blanched or roasted broccolini, or whatever green you have
+**For the bowl:**
+- 2 salmon fillets
+- Cooked rice
+- Vegetables of your choice
+- Chili crunch
 
 ### **Mise en Place**
 
-- Whisk together miso, mirin, sake, and sugar until smooth
-- Pat fish dry with paper towels
-- Line a sheet pan or broiler pan with foil and oil lightly
+- Whisk together all marinade ingredients, mashing the miso with a fork first until fully incorporated
+- Submerge salmon in marinade, cover, and refrigerate 1 hour to overnight
+- Line a baking sheet with foil; spray if you want the skin to release
+- If making the glaze, measure out the soy, water, and cornstarch
 
 ### **Instructions**
 
-1. **Marinate** the salmon. Coat each fillet generously in the miso glaze and let sit in the fridge for at least 1 hour, up to overnight. The longer it marinates, the deeper the flavor.
-2. **Heat** your broiler to high. Position a rack about 6 inches from the element.
-3. **Wipe** off excess glaze from the fish — not all of it, just the heavy drips. Too much miso on top burns before the fish cooks through.
-4. **Broil** 8–10 minutes, depending on thickness. You're looking for deep caramelization on top and fish that flakes when pressed gently. No need to flip.
-5. **Rest** for 2 minutes. Finish with sesame seeds and scallions.
-6. **Serve** over steamed rice with a green vegetable alongside.
+1. Pull the salmon from the marinade and wipe it down. The sugars from the sake, mirin, and sugar will scorch under the broiler if you don't.
+2. Set the wiped fillets on the prepared baking sheet. Dust lightly with white pepper.
+3. Set the oven to broil. Position one rack close to the broiler, one down low.
+4. Broil until cooked through, 125–130°F internal for salmon. Watch it. When it starts to color and threatens to burn, drop the pan to the lower rack.
+5. Serve over rice with vegetables. Spoon chili crunch generously over the top.
+
+**If making the glaze:**
+1. Combine soy sauce and water in a small saucepan over medium heat. Simmer 3 minutes.
+2. Stir in the cornstarch slurry. Cook another 3 minutes until thickened. Spoon over the finished fish.
 
 ### **Notes**
 
-- White miso is milder and sweeter than red miso. Either works, but white is the classic choice here.
-- Black cod (sablefish) is incredible with this glaze and is how Nobu made the dish famous. Takes a longer marinade — 24 to 48 hours is ideal — and benefits from an even gentler broil.
-- Leftovers are excellent cold, flaked into a rice bowl with pickled ginger and a drizzle of soy.
-- Don't use a grill for this. The sugars in the glaze will flare up and burn. Broiler only.
+- The marinade is basically teriyaki with miso thrown in. Soy, mirin, sake in equal parts is the backbone, which means the leftover marinade is most of the way to a teriyaki sauce already. If you're making the glaze, pull from the excess and add the cornstarch slurry rather than starting from scratch.
+- Wiping the fish down before broiling isn't optional if you care about the surface. The sugars go from caramelized to burnt fast under a broiler.
+- If you're not fussed about the skin sticking, let it stick. Makes pulling the flesh clean with a fish turner easier.
+- Shiro (white) miso is milder and sweeter. Red miso is funkier and more aggressive. Both work.

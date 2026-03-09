@@ -1,61 +1,53 @@
 ---
-title: "Black-Eyed Pea Soup"
-description: "A smoky, deeply savory black-eyed pea soup that comes together in one pot. Good the day you make it, better the next."
+title: "Black-Eyed Peas & Collard Greens"
+description: "Black-eyed peas and collard greens with bacon. Make a pot on Sunday, eat well all week."
 date: "2026-02-15"
 author: "Tripp"
 tags: ["recipes", "soup", "beans", "pork", "weeknight", "southern"]
 heroImage: "/media/posts/holdingcellforphotos/black-eyed-pea-soup1.jpeg"
 ---
 
-Black-eyed peas don't get enough credit. They're creamy, earthy, and take on smoke better than almost any other legume. This soup leans into that with smoked sausage and a long, lazy simmer that turns everything into something worth eating for several days straight.
-
-It's a one-pot situation. You don't need to soak the peas overnight if you're using canned — and I almost always use canned because I'm not planning dinner the night before.
+A Covid meal sent to me by my favorite chef on the planet, Chris Varteressian. In college he would make me fresh ginger tea when I was sick, let me try his latest brews he had fermenting, and educate me on various food histories and techniques. Not to mention he whips up the greatest Texas Longhorn tailgate meals. A great person that got me into cooking. I cook this once a month at least and freeze leftovers. Makes for an easy healthy weeknight meal when you can't cook.
 
 ### **Ingredients**
 
-- 2 cans black-eyed peas, drained and rinsed (or 1 lb dried, soaked overnight)
-- 12 oz smoked sausage (andouille or kielbasa), sliced into rounds
-- 1 yellow onion, diced
-- 4 cloves garlic, minced
-- 2 stalks celery, diced
-- 1 green bell pepper, diced
+- 1 lb dried black-eyed peas (or 3 cans, drained)
+- 1/2 lb bacon
+- 1/2 yellow or sweet onion, diced
+- 2 large carrots, diced
+- 2–3 celery stalks, diced
+- 1 bunch collard greens
+- 2 cloves garlic, minced
 - 4 cups chicken stock
-- 1 can (14 oz) diced tomatoes, with juices
-- 1 tsp smoked paprika
-- 1/2 tsp cumin
-- 1/2 tsp cayenne (or to taste)
-- 2 bay leaves
-- Salt and black pepper
-- Olive oil or butter, for sautéing
-- Fresh thyme or flat-leaf parsley, to finish
-
-**To serve:**
-- White rice or crusty bread
+- 1 bouquet garni (thyme & oregano)
+- 1 tbsp brown sugar
+- 1 tbsp Worcestershire sauce
+- Sherry vinegar or cider vinegar, to taste
+- 1 tbsp olive oil
+- Salt and pepper to taste
 
 ### **Mise en Place**
 
-- Dice onion, celery, and bell pepper
+- Soak peas overnight in water (or simmer 1 hour and let sit). If using canned, drain and skip this step.
+- Dice onion, carrots, and celery (mirepoix)
+- Strip collard greens from stems, stack and slice into ~1/2-inch strips
 - Mince garlic
-- Slice sausage into rounds
-- Drain and rinse peas if using canned
+- Cook bacon at 400°F, chop once done, reserve the fat
 
 ### **Instructions**
 
-1. **Heat** a large Dutch oven or heavy pot over medium-high. Add a drizzle of oil and brown the sausage slices until they develop color on both sides, about 4–5 minutes. Remove and set aside.
-2. **Reduce** heat to medium. In the same pot, sauté onion, celery, and bell pepper until softened, about 6 minutes. Add garlic and cook another minute.
-3. **Add** smoked paprika, cumin, and cayenne. Stir for 30 seconds until fragrant.
-4. **Pour in** chicken stock and diced tomatoes. Add bay leaves, then return the sausage to the pot.
-5. **Add** the black-eyed peas. Stir to combine, season with salt and pepper, and bring to a boil.
-6. **Reduce** to a low simmer, cover, and cook for 30–40 minutes. The peas should be very tender and the broth slightly thickened. If using dried soaked peas, plan on 60–75 minutes.
-7. **Taste** and adjust seasoning. Remove bay leaves.
-8. **Serve** over white rice or with bread. Finish with fresh thyme or parsley.
+1. Drain soaked peas. Add to a pot with stock and bouquet garni. Simmer until almost cooked through, about 45 minutes. If using canned, skip this step.
+2. Cook bacon in a 400°F oven. Chop and set aside, reserve the fat.
+3. In a Dutch oven, add olive oil. Sauté mirepoix about 5 minutes. Add garlic, cook 30 seconds. Add collard greens and cook down slightly.
+4. Add the peas and their broth into the pot with the vegetables.
+5. Ten minutes before you're done, add the bacon and reserved fat, brown sugar, Worcestershire, and vinegar. Stir, taste, and adjust seasoning.
+6. Serve with cornbread.
 
 ### **Notes**
 
-- This soup is significantly better on day two. The flavors meld overnight in the fridge and the broth thickens up nicely.
-- Andouille gives more heat and smoke; kielbasa is milder. Both are good — just depends on how much heat you want.
-- If you want a thicker soup, smash a cup or two of peas against the side of the pot and stir it back in. Instant body.
-- Works well with collard greens or kale stirred in during the last 10 minutes of cooking.
+- The vinegar is important. Start with a splash, taste, and add more. It brightens the whole thing.
+- This freezes well. Make a full pot and you've got several weeknight meals ready to go.
+- If you want it more like a soup, pull back on simmering time and leave more broth. If you want it thick and stew-like, let it cook down longer uncovered at the end.
 
 <video
   src="/media/posts/holdingcellforphotos/Black%20Eyed%20Pea%20Soup%20Short.mp4"

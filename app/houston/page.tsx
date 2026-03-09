@@ -110,7 +110,12 @@ function RestaurantCard({ restaurant, onSelect, isWantToTry }: { restaurant: Res
       <div className="px-5 pt-5 pb-4 flex-1">
         <div className="flex items-start justify-between gap-2 mb-2">
           <span className="text-xs font-semibold uppercase tracking-widest text-lapis">{r.cuisine}</span>
-          {r.topRank !== undefined && <span className="text-xs font-bold text-terracotta tabular-nums">#{r.topRank}</span>}
+          {r.topRank !== undefined && (
+            <span className="inline-flex items-center justify-center flex-shrink-0 bg-terracotta text-sand text-[11px] font-bold tabular-nums rounded-full"
+              style={{ minWidth: 22, height: 22, padding: '0 5px' }}>
+              {r.topRank}
+            </span>
+          )}
           {isWantToTry && <span className="text-[10px] font-semibold uppercase tracking-wider text-muted border border-border rounded-full px-2 py-0.5">On My List</span>}
         </div>
         <h2 className="font-serif text-xl text-espresso leading-tight group-hover:text-terracotta transition-colors">{r.name}</h2>

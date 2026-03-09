@@ -24,7 +24,6 @@ function renderDistinctions(d: Restaurant['distinctions']): string {
   if (!d) return '';
   const parts: string[] = [];
 
-  // Michelin — icon inline via unicode approximations for the popup context
   if (d.michelin === 'star') {
     parts.push(`<span style="display:inline-flex;align-items:center;gap:3px;background:#fde8ec;border:1px solid #fbb8c6;border-radius:999px;padding:1px 7px;">` +
       `<span style="color:#E8003D;font-size:12px;line-height:1;">✦</span>` +
@@ -76,21 +75,44 @@ function buildPopupHtml(loc: Restaurant): string {
     </div>`;
 }
 
+function buildMarkers(L: any, map: any, locations: Restaurant[], isWantToTry: boolean, onSelect: (id: string) => void): Record<string, any> {
+  const markers: Record<string, any> = {};
+  const pinColor = isWantToTry ? '#6B8FAB' : '#2E5E8E';
+
+  locations.forEach((loc) => {
+    const iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36">
+      <path d="M14 0C6.268 0 0 6.268 0 14c0 9.94 14 22 14 22S28 23.94 28 14C28 6.268 21.732 0 14 0z" fill="${pinColor}" stroke="#fff" stroke-width="1.5"/>
+      <circle cx="14" cy="14" r="5" fill="#fff"/>
+    </svg>`;
+    const icon   = L.divIcon({ html: iconHtml, className: '', iconSize: [28,36], iconAnchor: [14,36], popupAnchor: [0,-38] });
+    const marker = L.marker([loc.lat, loc.lng], { icon });
+    marker.bindPopup(buildPopupHtml(loc), { maxWidth: 300, className: 'mg-popup' });
+    marker.on('click', () => onSelect(loc.id));
+    marker.addTo(map);
+    markers[loc.id] = marker;
+  });
+
+  return markers;
+}
+
 export default function HoustonMap({ locations, selected, onSelect, isDark = false, isWantToTry = false }: Props) {
   const containerRef   = useRef<HTMLDivElement>(null);
   const mapRef         = useRef<any>(null);
   const tileRef        = useRef<any>(null);
   const markersRef     = useRef<Record<string, any>>({});
   const initializedRef = useRef(false);
+  // Keep stable refs to avoid stale closures in effects
+  const onSelectRef    = useRef(onSelect);
+  onSelectRef.current  = onSelect;
 
+  // ── Effect 1: Initialize map (once) ──────────────────────────────────────
   useEffect(() => {
     if (initializedRef.current) return;
     initializedRef.current = true;
 
     function initMap() {
       const L = window.L;
-      if (!L || !containerRef.current) return;
-      if (mapRef.current) return;
+      if (!L || !containerRef.current || mapRef.current) return;
 
       const map = L.map(containerRef.current, {
         center: [29.7480, -95.3850], zoom: 12, zoomControl: false,
@@ -102,19 +124,8 @@ export default function HoustonMap({ locations, selected, onSelect, isDark = fal
         attribution: ATTRIBUTION, maxZoom: 19, subdomains: 'abcd',
       }).addTo(map);
 
-      const pinColor = isWantToTry ? '#6B8FAB' : '#2E5E8E'; // lighter lapis for want-to-try
-      locations.forEach((loc) => {
-        const iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36">
-          <path d="M14 0C6.268 0 0 6.268 0 14c0 9.94 14 22 14 22S28 23.94 28 14C28 6.268 21.732 0 14 0z" fill="${pinColor}" stroke="#fff" stroke-width="1.5"/>
-          <circle cx="14" cy="14" r="5" fill="#fff"/>
-        </svg>`;
-        const icon   = L.divIcon({ html: iconHtml, className: '', iconSize: [28,36], iconAnchor: [14,36], popupAnchor: [0,-38] });
-        const marker = L.marker([loc.lat, loc.lng], { icon });
-        marker.bindPopup(buildPopupHtml(loc), { maxWidth: 300, className: 'mg-popup' });
-        marker.on('click', () => onSelect(loc.id));
-        marker.addTo(map);
-        markersRef.current[loc.id] = marker;
-      });
+      // Markers are managed by Effect 2 — trigger it now that map exists
+      markersRef.current = buildMarkers(L, map, locations, isWantToTry, (id) => onSelectRef.current(id));
     }
 
     if (window.L) { initMap(); return; }
@@ -137,11 +148,26 @@ export default function HoustonMap({ locations, selected, onSelect, isDark = fal
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Effect 2: Re-render markers whenever locations or pin style changes ──
+  useEffect(() => {
+    const map = mapRef.current;
+    const L   = window.L;
+    if (!map || !L) return;
+
+    // Remove all current markers
+    Object.values(markersRef.current).forEach((m) => m.remove());
+
+    // Re-add for the current filtered locations
+    markersRef.current = buildMarkers(L, map, locations, isWantToTry, (id) => onSelectRef.current(id));
+  }, [locations, isWantToTry]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Effect 3: Tile layer theme ────────────────────────────────────────────
   useEffect(() => {
     if (!tileRef.current) return;
     tileRef.current.setUrl(isDark ? TILES.dark : TILES.light);
   }, [isDark]);
 
+  // ── Effect 4: Fly to selected marker ─────────────────────────────────────
   useEffect(() => {
     if (!mapRef.current || !selected) return;
     const marker = markersRef.current[selected];
