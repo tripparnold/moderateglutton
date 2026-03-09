@@ -5,6 +5,7 @@ date: "2025-04-30"
 author: "Tripp"
 tags: ["journal", "anthony-bourdain", "thomas-keller", "french-laundry", "french-cooking"]
 heroImage: "/media/posts/5/thomas_keller-2.jpg"
+homepage: false
 ---
 
 Recently, I read *A Cook's Tour: Global Adventures in Extreme Cuisines* by Anthony Bourdain. It's a great collection of some of his early travels while filming *A Cook's Tour* for Food Network.

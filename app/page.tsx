@@ -7,7 +7,7 @@ const SECTIONS = ['recipes', 'spills'] as const;
 function getScrollPosts() {
   const all = SECTIONS.flatMap((section) =>
     getAllPosts(section)
-      .filter((p) => !!p.frontmatter.heroImage)
+      .filter((p) => !!p.frontmatter.heroImage && p.frontmatter.homepage !== false)
       .map((p) => ({
         slug:        p.slug,
         section,

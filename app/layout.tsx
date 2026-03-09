@@ -61,9 +61,50 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://moderateglutton.com/#organization',
+      name: 'Moderate Glutton',
+      url: 'https://moderateglutton.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://moderateglutton.com/media/website/logo-icon-512.png',
+        width: 512,
+        height: 512,
+      },
+      sameAs: [],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://moderateglutton.com/#website',
+      url: 'https://moderateglutton.com',
+      name: 'Moderate Glutton',
+      description: DESCRIPTION,
+      publisher: { '@id': 'https://moderateglutton.com/#organization' },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: 'https://moderateglutton.com/?q={search_term_string}',
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col">
         <Nav />
         <main id="main-content" className="flex-1">

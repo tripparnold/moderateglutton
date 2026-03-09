@@ -176,19 +176,19 @@ function FilterBar({ filters, onChange, showTop10 }: { filters: Filters; onChang
   function set<K extends keyof Filters>(key: K, val: Filters[K]) { onChange({ ...filters, [key]: val }); }
   const pill    = 'text-xs px-3 py-1.5 rounded-full border transition-colors font-medium';
   const pillOn  = `${pill} bg-espresso text-sand border-espresso`;
-  const pillOff = `${pill} border-espresso/25 text-tan hover:border-tan hover:text-espresso`;
+  const pillOff = `${pill} border-[#9C8276] text-tan hover:border-tan hover:text-espresso`;
 
   return (
     <div className="mb-6 space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
         {showTop10 && (
           <button onClick={() => set('top10Only', !filters.top10Only)}
-            className={`${pill} ${filters.top10Only ? 'bg-lapis text-sand border-lapis' : 'border-border text-tan hover:border-lapis hover:text-lapis'}`}>
+            className={`${pill} ${filters.top10Only ? 'bg-lapis text-sand border-lapis' : 'border-[#9C8276] text-tan hover:border-lapis hover:text-lapis'}`}>
             Tripp&apos;s Top 10
           </button>
         )}
         <button onClick={() => setOpen(!open)}
-          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors font-medium ${hasOtherFilters ? 'border-lapis text-lapis bg-lapis/5' : 'border-espresso/25 text-muted hover:border-tan hover:text-tan'}`}>
+          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors font-medium ${hasOtherFilters ? 'border-lapis text-lapis bg-lapis/5' : 'border-[#9C8276] text-muted hover:border-tan hover:text-tan'}`}>
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 3h14M4 8h8M7 13h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
           {open ? 'Hide filters' : 'More filters'}
           {hasOtherFilters && <span className="ml-0.5">· {[filters.neighborhood, filters.cuisine, filters.price, filters.awardedOnly ? 'Awarded' : ''].filter(Boolean).join(', ')}</span>}
@@ -249,17 +249,17 @@ export default function HoustonPage() {
   );
 
   const viewBtn = (active: boolean) =>
-    `px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+    `px-4 py-2 rounded-full text-sm font-medium transition-colors ${
       active
-        ? 'bg-lapis text-sand border-lapis'
-        : 'bg-transparent text-espresso border-espresso/25 hover:border-lapis hover:text-lapis'
+        ? 'bg-lapis text-sand border border-lapis'
+        : 'bg-transparent text-espresso border border-[#9C8276] hover:border-lapis hover:text-lapis'
     }`;
 
   const listBtn = (active: boolean) =>
-    `px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+    `px-4 py-2 rounded-full text-sm font-medium transition-colors ${
       active
-        ? 'bg-lapis text-sand border-lapis'
-        : 'bg-transparent text-espresso border-espresso/25 hover:border-lapis hover:text-lapis'
+        ? 'bg-lapis text-sand border border-lapis'
+        : 'bg-transparent text-espresso border border-[#9C8276] hover:border-lapis hover:text-lapis'
     }`;
 
   const spotCount = showWantToTry ? WANT_TO_TRY.length : RESTAURANTS.length;
