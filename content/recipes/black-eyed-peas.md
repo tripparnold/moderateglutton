@@ -4,7 +4,7 @@ description: "Black-eyed peas and collard greens with bacon. Make a pot on Sunda
 date: "2026-02-15"
 author: "Tripp"
 tags: ["recipes", "soup", "beans", "pork", "weeknight", "southern"]
-heroImage: "/media/posts/holdingcellforphotos/black-eyed-pea-soup1.jpeg"
+heroImage: "/media/posts/black-eyed-peas/black-eyed-pea-soup1.jpeg"
 ---
 
 A Covid meal sent to me by my favorite chef on the planet, Chris Varteressian. In college he would make me fresh ginger tea when I was sick, let me try his latest brews he had fermenting, and educate me on various food histories and techniques. Not to mention he whips up the greatest Texas Longhorn tailgate meals. A great person that got me into cooking. I cook this once a month at least and freeze leftovers. Makes for an easy healthy weeknight meal when you can't cook.
@@ -50,7 +50,7 @@ A Covid meal sent to me by my favorite chef on the planet, Chris Varteressian. I
 - If you want it more like a soup, pull back on simmering time and leave more broth. If you want it thick and stew-like, let it cook down longer uncovered at the end.
 
 <video
-  src="/media/posts/holdingcellforphotos/Black%20Eyed%20Pea%20Soup%20Short.mp4"
+  src="/media/posts/black-eyed-peas/Black%20Eyed%20Pea%20Soup%20Short.mp4"
   controls
   playsinline
   style="width:100%;max-width:460px;border-radius:12px;display:block;margin:2rem auto 0;"

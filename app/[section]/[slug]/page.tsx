@@ -65,10 +65,12 @@ export default async function PostPage({ params }: Props) {
   const galleryImages: string[] = (frontmatter.galleryImages as string[]) ?? [];
   const date:          string   = (frontmatter.date          as string)   ?? '';
 
+  // Spills (What I Cooked This Week) shows full date; everything else shows year only
+  const isSpills = params.section === 'spills';
   const formattedDate = date
-    ? new Date(date).toLocaleDateString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric',
-      })
+    ? isSpills
+      ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+      : new Date(date).getFullYear().toString()
     : '';
 
   return (

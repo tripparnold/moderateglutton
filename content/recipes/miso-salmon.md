@@ -1,15 +1,16 @@
 ---
-title: "Miso-Glazed Salmon"
+title: "Miso Marinated Salmon"
 description: "Broiled miso-marinated salmon or whatever fish you've got."
 date: "2026-03-01"
 author: "Tripp"
 tags: ["recipes", "seafood", "salmon", "miso", "weeknight", "japanese"]
-heroImage: "/media/posts/holdingcellforphotos/miso-salmon1.jpeg"
+heroImage: "/media/posts/miso-salmon/miso-salmon1.jpeg"
 galleryImages:
-  - "/media/posts/holdingcellforphotos/miso-salmon1.jpeg"
-  - "/media/posts/holdingcellforphotos/miso-salmon2jpeg.jpeg"
-  - "/media/posts/holdingcellforphotos/miso-salmon3.jpeg"
-  - "/media/posts/holdingcellforphotos/miso-salmon5.jpeg"
+  - "/media/posts/miso-salmon/miso-salmon1.jpeg"
+  - "/media/posts/miso-salmon/miso-salmon2jpeg.jpeg"
+  - "/media/posts/miso-salmon/miso-salmon3.jpeg"
+  - "/media/posts/miso-salmon/miso-salmon5.jpeg"
+  - "/media/posts/miso-salmon/miso-blackcod4.jpeg"
 ---
 
 The marinade does heavy lifting here. It pulls the fishiness back and loads in umami. An hour is enough; overnight is better if you plan ahead. Under the broiler it goes dark and lacquered fast, so you have to pay attention, but that's really the only part that requires you. Have an instant read thermometer on hand. We eat with medium grain rice, veggies, and sliced avocado.

@@ -54,10 +54,11 @@ export default function SectionPage({ params }: Props) {
             const heroImage:   string = (post.frontmatter.heroImage  as string)  ?? '';
             const date:        string = (post.frontmatter.date        as string)  ?? '';
 
+            // Spills shows full date; other sections year only
             const formattedDate = date
-              ? new Date(date).toLocaleDateString('en-US', {
-                  year: 'numeric', month: 'short', day: 'numeric',
-                })
+              ? params.section === 'spills'
+                ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                : new Date(date).getFullYear().toString()
               : '';
 
             return (
