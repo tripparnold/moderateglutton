@@ -158,9 +158,7 @@ export default function RecipesClient({ posts, cuisines }: Props) {
                     />
                   </div>
                 ) : (
-                  <div className="w-full aspect-[4/3] bg-linen flex items-center justify-center">
-                    <span className="text-muted text-3xl">🥘</span>
-                  </div>
+                  <div className="w-full aspect-[4/3] bg-linen" />
                 )}
                 <div className="p-4">
                   <h2 className="font-serif font-medium text-espresso text-lg leading-snug group-hover:text-terracotta transition-colors">
