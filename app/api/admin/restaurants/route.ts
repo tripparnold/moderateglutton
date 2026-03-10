@@ -34,6 +34,21 @@ function writeCustom(data: CustomData) {
 function slugify(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
+
+async function geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address)}`;
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'ModerateGlutton/1.0 (moderateglutton.com)' },
+    });
+    if (!res.ok) return null;
+    const data = await res.json() as Array<{ lat: string; lon: string }>;
+    if (!data.length) return null;
+    return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+  } catch {
+    return null;
+  }
+}
 async function isAuth(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value;
   return !!token && await verifyToken(token);
@@ -98,11 +113,19 @@ export async function POST(req: NextRequest) {
   ]);
   while (taken.has(id)) id = `${slugify(name)}-${i++}`;
 
+  // Auto-geocode the address; fall back to Houston centre if it fails
+  let lat = body.lat ?? 29.7604;
+  let lng = body.lng ?? -95.3698;
+  if (!body.lat || !body.lng) {
+    const coords = await geocodeAddress(address.trim());
+    if (coords) { lat = coords.lat; lng = coords.lng; }
+  }
+
   custom.added.push({
     id, name: name.trim(), neighborhood: neighborhood.trim(),
     cuisine: cuisine.trim(), cuisineTags: body.cuisineTags ?? [cuisine.trim()],
     price, note: body.note?.trim() ?? '', address: address.trim(),
-    lat: body.lat ?? 29.7604, lng: body.lng ?? -95.3698,
+    lat, lng,
     wantToTry: body.wantToTry ?? false,
   });
   writeCustom(custom);

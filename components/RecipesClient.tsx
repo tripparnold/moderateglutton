@@ -166,9 +166,6 @@ export default function RecipesClient({ posts, cuisines }: Props) {
                   <h2 className="font-serif font-medium text-espresso text-lg leading-snug group-hover:text-terracotta transition-colors">
                     {post.title}
                   </h2>
-                  {post.description && (
-                    <p className="text-sm text-muted mt-1.5 line-clamp-2">{post.description}</p>
-                  )}
                 </div>
               </Link>
             </li>

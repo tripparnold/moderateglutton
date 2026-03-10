@@ -30,7 +30,14 @@ interface AdminPost {
   tags:        string[];
 }
 
-type Tab = 'restaurants' | 'recipes' | 'posts';
+type Tab = 'restaurants' | 'recipes' | 'posts' | 'subscribers';
+
+interface Subscriber {
+  id?:           string;
+  email:         string;
+  created_at?:   string;
+  unsubscribed?: boolean;
+}
 
 // ── Sub-components ────────────────────────────────────────────────
 function SaveButton({ saving, onClick }: { saving: boolean; onClick: () => void }) {
@@ -335,6 +342,122 @@ function PostRow({ p, onSaved }: { p: AdminPost; onSaved: (updated: AdminPost) =
   );
 }
 
+// ── Subscribers Panel ─────────────────────────────────────────────
+function SubscribersPanel() {
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+  const [loading,     setLoading]     = useState(true);
+  const [email,       setEmail]       = useState('');
+  const [adding,      setAdding]      = useState(false);
+  const [addError,    setAddError]    = useState('');
+  const [confirmId,   setConfirmId]   = useState<string | null>(null);
+  const [deleting,    setDeleting]    = useState<string | null>(null);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/subscribers');
+      if (res.ok) setSubscribers(await res.json());
+    } finally { setLoading(false); }
+  }
+
+  useEffect(() => { load(); }, []);
+
+  async function addSubscriber() {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setAddError('Enter a valid email.'); return;
+    }
+    setAdding(true); setAddError('');
+    try {
+      const res = await fetch('/api/admin/subscribers', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      });
+      if (!res.ok) throw new Error();
+      setEmail('');
+      await load();
+    } catch { setAddError('Could not add — try again.'); }
+    finally { setAdding(false); }
+  }
+
+  async function deleteSubscriber(sub: Subscriber) {
+    const key = sub.id ?? sub.email;
+    setDeleting(key);
+    try {
+      const res = await fetch('/api/admin/subscribers', {
+        method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: sub.id, email: sub.email }),
+      });
+      if (!res.ok) throw new Error();
+      setSubscribers((prev) => prev.filter((s) => (s.id ?? s.email) !== key));
+    } catch { /* silent */ }
+    finally { setDeleting(null); setConfirmId(null); }
+  }
+
+  const inputCls = 'flex-1 px-3 py-2 text-xs rounded border border-border bg-transparent text-espresso focus:outline-none focus:border-tan';
+
+  return (
+    <div>
+      {/* Add form */}
+      <div className="mb-6">
+        <p className="text-xs text-muted mb-2">Add subscriber</p>
+        <div className="flex gap-2">
+          <input
+            type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addSubscriber()}
+            className={inputCls} placeholder="email@example.com" />
+          <button onClick={addSubscriber} disabled={adding}
+            className="px-3 py-1.5 text-xs rounded bg-terracotta text-white hover:opacity-90 transition-opacity disabled:opacity-50">
+            {adding ? 'Adding…' : 'Add'}
+          </button>
+        </div>
+        {addError && <p className="text-xs text-red-600 mt-1">{addError}</p>}
+      </div>
+
+      {/* List */}
+      {loading ? (
+        <p className="text-muted text-sm text-center py-12">Loading…</p>
+      ) : subscribers.length === 0 ? (
+        <p className="text-muted text-sm text-center py-12">No subscribers yet.</p>
+      ) : (
+        <ul>
+          {subscribers.map((sub) => {
+            const key = sub.id ?? sub.email;
+            const date = sub.created_at
+              ? new Date(sub.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+              : '';
+            return (
+              <li key={key} className="border-b border-border last:border-0 py-3 flex items-center justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-espresso truncate">{sub.email}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    {date && <span className="text-xs text-muted">{date}</span>}
+                    {sub.unsubscribed && <span className="text-xs text-muted bg-linen px-1.5 py-0.5 rounded">Unsubscribed</span>}
+                  </div>
+                </div>
+                {confirmId !== key ? (
+                  <button onClick={() => setConfirmId(key)}
+                    className="text-xs text-muted hover:text-red-500 transition-colors flex-shrink-0">
+                    Delete
+                  </button>
+                ) : (
+                  <span className="flex items-center gap-1.5 flex-shrink-0">
+                    <span className="text-xs text-red-600">Sure?</span>
+                    <button onClick={() => deleteSubscriber(sub)} disabled={deleting === key}
+                      className="text-xs font-medium text-red-600 hover:text-red-800 disabled:opacity-50">
+                      {deleting === key ? 'Deleting…' : 'Yes'}
+                    </button>
+                    <button onClick={() => setConfirmId(null)} className="text-xs text-muted hover:text-espresso">No</button>
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 // ── Main dashboard ─────────────────────────────────────────────────
 export default function AdminDashboard() {
   const router = useRouter();
@@ -396,7 +519,7 @@ export default function AdminDashboard() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Tab bar */}
         <div className="flex gap-1 mb-6 border border-border rounded-lg p-1 bg-linen/40">
-          {(['restaurants', 'recipes', 'posts'] as Tab[]).map((t) => (
+          {(['restaurants', 'recipes', 'posts', 'subscribers'] as Tab[]).map((t) => (
             <button key={t} onClick={() => { setTab(t); setSearchQuery(''); }}
               className={`flex-1 py-2 px-3 text-xs font-medium rounded-md transition-colors capitalize ${
                 tab === t ? 'bg-white shadow-sm text-espresso' : 'text-muted hover:text-espresso'
@@ -409,13 +532,17 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        {/* Search */}
-        <input type="search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={tab === 'restaurants' ? 'Search restaurants…' : 'Search posts…'}
-          className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-transparent text-espresso placeholder-muted focus:outline-none focus:border-tan transition-colors mb-6" />
+        {/* Search — hidden on subscribers tab */}
+        {tab !== 'subscribers' && (
+          <input type="search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={tab === 'restaurants' ? 'Search restaurants…' : 'Search posts…'}
+            className="w-full px-4 py-2.5 text-sm rounded-lg border border-border bg-transparent text-espresso placeholder-muted focus:outline-none focus:border-tan transition-colors mb-6" />
+        )}
 
         {/* Content */}
-        {loading ? (
+        {tab === 'subscribers' ? (
+          <SubscribersPanel />
+        ) : loading ? (
           <p className="text-muted text-sm text-center py-12">Loading…</p>
         ) : tab === 'restaurants' ? (
           <>
