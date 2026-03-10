@@ -174,21 +174,22 @@ function FilterBar({ filters, onChange, showTop10 }: { filters: Filters; onChang
   const [open, setOpen] = useState(false);
   const hasOtherFilters = !!(filters.neighborhood || filters.cuisine || filters.price || filters.awardedOnly);
   function set<K extends keyof Filters>(key: K, val: Filters[K]) { onChange({ ...filters, [key]: val }); }
-  const pill    = 'text-xs px-3 py-1.5 rounded-full border transition-colors font-medium';
-  const pillOn  = `${pill} bg-espresso text-sand border-espresso`;
-  const pillOff = `${pill} border-[#9C8276] text-tan hover:border-espresso hover:text-espresso`;
+  const pill     = 'text-xs px-3 py-1.5 rounded-full font-medium transition-colors';
+  const pillStyle = (active: boolean): React.CSSProperties => active
+    ? { border: '1.5px solid #2C1810', backgroundColor: '#2C1810', color: '#EDE8DF' }
+    : { border: '1.5px solid #9C8276', backgroundColor: 'transparent', color: '#7A6248' };
 
   return (
     <div className="mb-6 space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
         {showTop10 && (
           <button onClick={() => set('top10Only', !filters.top10Only)}
-            className={`${pill} ${filters.top10Only ? 'bg-espresso text-sand border-espresso' : 'border-[#9C8276] text-tan hover:border-espresso hover:text-espresso'}`}>
+            className={pill} style={pillStyle(filters.top10Only)}>
             Tripp&apos;s Top 10
           </button>
         )}
         <button onClick={() => setOpen(!open)}
-          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors font-medium ${hasOtherFilters ? 'bg-espresso text-sand border-espresso' : 'border-[#9C8276] text-tan hover:border-espresso hover:text-espresso'}`}>
+          className={`${pill} flex items-center gap-1.5`} style={pillStyle(hasOtherFilters)}>
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 3h14M4 8h8M7 13h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
           {open ? 'Hide filters' : 'More filters'}
           {hasOtherFilters && <span className="ml-0.5">· {[filters.neighborhood, filters.cuisine, filters.price, filters.awardedOnly ? 'Awarded' : ''].filter(Boolean).join(', ')}</span>}
@@ -219,13 +220,13 @@ function FilterBar({ filters, onChange, showTop10 }: { filters: Filters; onChang
           <div>
             <p className="text-xs uppercase tracking-widest text-muted mb-2 font-medium">Price</p>
             <div className="flex flex-wrap gap-1.5">
-              <button onClick={() => set('price', '')} className={!filters.price ? pillOn : pillOff}>All</button>
-              {PRICE_TIERS.map(p => <button key={p} onClick={() => set('price', p === filters.price ? '' : p)} className={filters.price === p ? pillOn : pillOff}>{p}</button>)}
+              <button onClick={() => set('price', '')} className={pill} style={pillStyle(!filters.price)}>All</button>
+              {PRICE_TIERS.map(p => <button key={p} onClick={() => set('price', p === filters.price ? '' : p)} className={pill} style={pillStyle(filters.price === p)}>{p}</button>)}
             </div>
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest text-muted mb-2 font-medium">Awards</p>
-            <button onClick={() => set('awardedOnly', !filters.awardedOnly)} className={filters.awardedOnly ? pillOn : pillOff}>Awarded only</button>
+            <button onClick={() => set('awardedOnly', !filters.awardedOnly)} className={pill} style={pillStyle(filters.awardedOnly)}>Awarded only</button>
           </div>
         </div>
       )}
@@ -248,19 +249,10 @@ export default function HoustonPage() {
     [selected]
   );
 
-  const viewBtn = (active: boolean) =>
-    `px-4 py-2 rounded-full text-sm font-semibold transition-colors border ${
-      active
-        ? 'bg-espresso text-sand border-espresso'
-        : 'bg-transparent text-espresso border-[#9C8276] hover:border-espresso'
-    }`;
-
-  const listBtn = (active: boolean) =>
-    `px-4 py-2 rounded-full text-sm font-semibold transition-colors border ${
-      active
-        ? 'bg-espresso text-sand border-espresso'
-        : 'bg-transparent text-espresso border-[#9C8276] hover:border-espresso'
-    }`;
+  const btnBase = 'px-4 py-2 rounded-full text-sm font-semibold transition-colors';
+  const btnStyle = (active: boolean): React.CSSProperties => active
+    ? { border: '1.5px solid #2C1810', backgroundColor: '#2C1810', color: '#EDE8DF' }
+    : { border: '1.5px solid #9C8276', backgroundColor: 'transparent', color: '#2C1810' };
 
   const spotCount = showWantToTry ? WANT_TO_TRY.length : RESTAURANTS.length;
 
@@ -273,21 +265,21 @@ export default function HoustonPage() {
 
       {/* Row 1: Map / List view toggle */}
       <div className="flex items-center gap-2 mb-3">
-        <button onClick={() => setView('map')}  className={viewBtn(view === 'map')}>Map</button>
-        <button onClick={() => setView('list')} className={viewBtn(view === 'list')}>List</button>
+        <button onClick={() => setView('map')}  className={btnBase} style={btnStyle(view === 'map')}>Map</button>
+        <button onClick={() => setView('list')} className={btnBase} style={btnStyle(view === 'list')}>List</button>
       </div>
 
       {/* Row 2: Content toggle + spot count */}
       <div className="flex items-center gap-2 mb-6 flex-wrap">
         <button
           onClick={() => { setShowWantToTry(false); setSelected(null); setFilters(FILTER_DEFAULT); }}
-          className={listBtn(!showWantToTry)}
+          className={btnBase} style={btnStyle(!showWantToTry)}
         >
           Places I&apos;ve Been
         </button>
         <button
           onClick={() => { setShowWantToTry(true); setSelected(null); setFilters(FILTER_DEFAULT); }}
-          className={listBtn(showWantToTry)}
+          className={btnBase} style={btnStyle(showWantToTry)}
         >
           On My List
         </button>
