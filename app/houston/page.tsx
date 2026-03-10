@@ -56,32 +56,6 @@ function DistinctionBadges({ d }: { d: Restaurant['distinctions'] }) {
   );
 }
 
-function ReservationLinks({ opentable, resy, stopProp }: { opentable?: string; resy?: string; stopProp?: boolean }) {
-  if (!opentable && !resy) return null;
-  const handle = stopProp ? (e: React.MouseEvent) => e.stopPropagation() : undefined;
-  return (
-    <div className="flex items-center gap-2 mt-2 flex-wrap">
-      {opentable && (
-        <a href={opentable} target="_blank" rel="noopener noreferrer" onClick={handle}
-          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors"
-          style={{ borderColor: '#DA3743', color: '#DA3743' }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#DA3743'; (e.currentTarget as HTMLElement).style.color = '#fff'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#DA3743'; }}>
-          OpenTable
-        </a>
-      )}
-      {resy && (
-        <a href={resy} target="_blank" rel="noopener noreferrer" onClick={handle}
-          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors"
-          style={{ borderColor: '#E84040', color: '#E84040' }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#E84040'; (e.currentTarget as HTMLElement).style.color = '#fff'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#E84040'; }}>
-          Resy
-        </a>
-      )}
-    </div>
-  );
-}
 
 function MapsLinks({ address }: { address: string }) {
   const q = encodeURIComponent(address);
@@ -158,7 +132,6 @@ function RestaurantCard({ restaurant, onSelect, isWantToTry }: { restaurant: Res
             <WebsiteLink url={r.website} />
           </div>
         )}
-        <ReservationLinks opentable={r.opentable} resy={r.resy} stopProp />
         <DistinctionBadges d={r.distinctions} />
       </div>
       <div className="px-5 pb-4 pt-0">
@@ -192,7 +165,6 @@ function SidebarDetail({ restaurant, onClose, isWantToTry }: { restaurant: Resta
           <WebsiteLink url={r.website} label="Visit Website" />
         </div>
       )}
-      <ReservationLinks opentable={r.opentable} resy={r.resy} />
       <DistinctionBadges d={r.distinctions} />
       <button onClick={onClose} className="mt-4 text-xs text-muted hover:text-lapis transition-colors">← Back to all</button>
     </div>

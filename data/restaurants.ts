@@ -29,8 +29,6 @@ export interface Restaurant {
   lng:          number;
   topRank?:     number;        // 1–10 for "Tripp's Current Go-To's"
   website?:     string;        // official restaurant website
-  opentable?:   string;        // full OpenTable URL e.g. https://www.opentable.com/r/tiny-champions-houston
-  resy?:        string;        // full Resy URL e.g. https://resy.com/cities/hou/nancys-hustle
   wantToTry?:   boolean;       // true = on Tripp's list, not yet visited
   distinctions?: {
     michelin?:        MichelinTier;
@@ -76,7 +74,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['American', 'Grill'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/credence-houston',
     lat:          29.7830,
     lng:          -95.5329,
   },
@@ -104,7 +101,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     note:         '',
     lat:          29.7345,
     lng:          -95.3904,
-    opentable:    'https://www.opentable.com/r/nancys-hustle-houston',
     distinctions: { michelin: 'bibgourmand' },
   },
   {
@@ -129,7 +125,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Italian'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/trattoria-sofia-houston',
     lat:          29.8029,
     lng:          -95.4086,
   },
@@ -142,7 +137,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Seafood'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/navy-blue-houston',
     lat:          29.7352,
     lng:          -95.4165,
     distinctions: {
@@ -158,7 +152,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Mediterranean', 'Middle Eastern'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/hamsa-houston',
     lat:          29.7162,
     lng:          -95.4147,
   },
@@ -171,7 +164,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Spanish', 'Basque'],
     price:        '$$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/baso-houston',
     lat:          29.8030,
     lng:          -95.4095,
     distinctions: { michelin: 'recommended' },
@@ -238,7 +230,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['European', 'American'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/squable-houston',
     lat:          29.8026,
     lng:          -95.4095,
   },
@@ -263,7 +254,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Italian', 'Pizza'],
     price:        '$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/coltivare-houston',
     lat:          29.7816,
     lng:          -95.3956,
   },
@@ -488,7 +478,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Steakhouse', 'American'],
     price:        '$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/star-rover-houston',
     lat:          29.8031,
     lng:          -95.3835,
   },
@@ -610,7 +599,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['American'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/balboa-surf-club-houston',
     lat:          29.7442,
     lng:          -95.4342,
   },
@@ -686,7 +674,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Indian', 'Fusion'],
     price:        '$$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/musaafer-houston',
     lat:          29.7481,
     lng:          -95.4282,
   },
@@ -712,7 +699,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['American', 'French'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/bludorn-houston',
     lat:          29.7511,
     lng:          -95.3875,
     distinctions: {
@@ -741,7 +727,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Mexican', 'Seafood'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/caracol-houston',
     lat:          29.7442,
     lng:          -95.4342,
     distinctions: {
@@ -781,7 +766,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Japanese', 'Asian'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/katami-houston',
     lat:          29.7554,
     lng:          -95.3965,
   },
@@ -807,7 +791,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Italian'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/marmo-houston',
     lat:          29.7459,
     lng:          -95.3975,
   },
@@ -820,7 +803,6 @@ const RAW_RESTAURANTS: Omit<Restaurant, 'topRank'>[] = [
     cuisineTags:  ['Greek', 'Mediterranean'],
     price:        '$$$',
     note:         '',
-    opentable:    'https://www.opentable.com/r/okto-houston',
     lat:          29.7459,
     lng:          -95.3975,
   },
