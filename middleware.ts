@@ -8,15 +8,23 @@ export async function middleware(request: NextRequest) {
   // Only guard /admin routes
   if (!pathname.startsWith('/admin')) return NextResponse.next();
 
-  // Let the login page and auth API through
-  if (pathname === '/admin' || pathname.startsWith('/api/admin/')) {
+  // Let the login page and login/logout API through unauthenticated
+  if (pathname === '/admin' ||
+      pathname === '/api/admin/login' ||
+      pathname === '/api/admin/logout') {
     return NextResponse.next();
   }
 
+  // All other /admin/* and /api/admin/* routes require a valid token
   const token = request.cookies.get(COOKIE_NAME)?.value;
   if (token && await verifyToken(token)) return NextResponse.next();
 
-  // Not authenticated — redirect to login
+  // API routes — return 401 rather than redirecting
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Page routes — redirect to login
   const loginUrl = new URL('/admin', request.url);
   loginUrl.searchParams.set('next', pathname);
   return NextResponse.redirect(loginUrl);

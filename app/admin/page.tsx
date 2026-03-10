@@ -26,7 +26,9 @@ function AdminLoginForm() {
       });
 
       if (res.ok) {
-        const next = searchParams.get('next') ?? '/admin/dashboard';
+        // Validate redirect stays on same origin (no open-redirect)
+        const raw  = searchParams.get('next') ?? '';
+        const next = raw.startsWith('/') && !raw.startsWith('//') ? raw : '/admin/dashboard';
         router.push(next);
       } else {
         const data = await res.json();
