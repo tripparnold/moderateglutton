@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken } from '@/lib/admin-auth';
+import { verifyToken, COOKIE_NAME } from '@/lib/admin-auth';
 import fs   from 'fs';
 import path from 'path';
-
-const COOKIE_NAME = 'admin_token';
 
 async function isAuth(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value;
